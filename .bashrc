@@ -41,7 +41,7 @@ alias mktar="tar -cvf"
 alias grep="grep --color=auto"
 
 
-# set in .inputrc
+# set in ~/.inputrc
 # bind '"\e[1;5C":forward-word'
 # #arrow left
 # bind '"\e[1;5D":backward-word'
@@ -55,28 +55,43 @@ alias grep="grep --color=auto"
 #
 # customize look
 #
-# if [[ -f ~/.DIR_COLORS ]]; then
-#     echo "found colors"
-#     eval "`dircolors -b ~/.DIR_COLORS`"
-# fi
-#export LESS_TERMCAP_us=$'\E[01;32m'
-#colors
+
+# Set LS_COLORS
+if [ -f ~/.DIR_COLORS ]; then
+    eval "`dircolors -b ~/.DIR_COLORS`"
+fi
+
+# colors
 PURPLE='\e[1;35m'
-CYAN='\e[0;35m'
+CYAN='\e[0;36m'
 BLUE='\e[1;34m'
 YELLOW='\e[1;33m'
 WHITE='\e[0;37m'
 RED='\e[0;31m'
+#NOCOL="\e]0;"
 
+# prompt
 export PROMPT_DIRTRIM=4
-#NAME="\[${PURPLE}\]\u\[${YELLOW}\]\[${WHITE}\]@\[${PURPLE}\]\h"
 NAME="\[${PURPLE}\]\u@\h"
+WINTITLE="\[\e]0;\u@\h: \w\a\]"
+EXTRA="\[${YELLOW}\][\@]"
 WDIR="\[${BLUE}\]\w"
 PROMPT="\[${YELLOW}\]>"
 CURCMD="\[${WHITE}\]"
-PS1="${NAME} ${WDIR} \n ${PROMPT} ${CURCMD}"
-#PS2='>'
+PS1="${WINTITLE} ${NAME} ${EXTRA} ${WDIR} \n ${PROMPT} ${CURCMD}"
+PS2='>'
 
+# window title (set in PS1)
+#echo -ne "\e]0;V's Bash Shell\a"
+
+# less colors
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
 
 #
 # custom functions
