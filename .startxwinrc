@@ -1,0 +1,14 @@
+#!/bin/sh
+
+export IMSETTINGS_INTEGRATE_DESKTOP=no
+export QT_QPA_PLATFORMTHEME="qt5ct"
+export XDG_MENU_PREFIX="xwin-"
+export XDG_CURRENT_DESKTOP="X-Cygwin"
+
+. /etc/X11/xinit/xinitrc-common
+
+xrdb -merge ~/.Xresources
+#xrdb -load ~/.Xresources
+
+exec /usr/bin/xwin-xdg-menu
+

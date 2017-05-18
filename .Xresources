@@ -1,0 +1,42 @@
+!! vincekd Xresource file
+
+Xft*antialias: true
+Xft*autohint: true
+Xft.dpi: 96
+Xft.hintstyle: hintmedium
+Xft.hinting: true
+
+
+urxvt*perl-ext-common:  default,matcher
+! do not scroll with output
+URxvt*scrollTtyOutput: false
+! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+! scroll back to the bottom on keypressc
+URxvt*scrollTtyKeypress: true
+URxvt*secondaryScreen: 1
+URxvt*secondaryScroll: 0
+
+! URxvt*geometry: 112x22
+URxvt*urlLauncher: firefox
+
+! URxvt*font: xft:terminus:pixelsize=10
+! URxvt*font: 9x15
+! URxvt*font: -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso8859-1
+! URxvt*font: xft:monaco:bold:size=10
+! URxvt*font: xft:monaco:pixelsize=10
+! URxvt*font: xft:Lucida Console:pixelsize=12
+URxvt*font: xft:Lucida Console:size=9
+! URxvt*faceName: BitStream Vera Sans Mono
+
+!URxvt*letterSpace: -2
+URxvt*background: black
+URxvt*foreground: grey
+URxvt*cursorColor: grey
+URxvt*scrollBar: false
+URxvt*rightScrollBar: false
+URxvt*saveLines: 15000
+URxvt*faceSize: 11
+URxvt*toolBar: off
+URxvt*lineSpace: 2
+

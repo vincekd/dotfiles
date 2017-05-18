@@ -29,16 +29,37 @@ shopt -s nocaseglob
 
 
 #
+# Path additions
+#
+if [ -d ~/scripts/ ]; then
+    PATH=$PATH:~/scripts/
+fi
+
+if [ -d ~/bin/ ]; then
+    PATH=$PATH:~/bin/
+fi
+
+# if [ -d ~/dev/scripts/ ]; then
+#     PATH=$PATH:~/dev/scripts/
+# fi
+
+export PATH
+
+
+#
 # aliases
 #
 LS_OPTS="--ignore='\.\.' --ignore='\.' --color=auto --group-directories-first --sort=time"
 alias l="ls -Fa ${LS_OPTS}"
 alias ll="l -lho --time-style='+%Y-%m-%d %H:%M'" # --time=ctime"
 alias em="emacs -nw"
+alias emo="/cygdrive/c/Program\ Files/emacs-25.2/bin/runemacs.exe"
 #alias hist="history | grep -E -v '^ *[0-9]+ *hist +' | grep -i"
 alias hist="history | grep -i"
 alias mktar="tar -cvf"
 alias grep="grep --color=auto"
+alias q="exit"
+alias lss="ll | grep -i"
 
 
 # set in ~/.inputrc
@@ -97,10 +118,10 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # custom functions
 #
 extract () {
-    if [[ $# -eq 0 ]]; then
+    if [ $# -eq 0 ]; then
         echo "No arguments entered"
     else
-        if [[ -f $1 ]]; then
+        if [ -f $1 ]; then
             case $1 in
                 *.tar.bz2)   tar xjf $1     ;;
                 *.tar.gz)    tar xzf $1     ;;
@@ -122,8 +143,8 @@ extract () {
 }
 
 dirsize () {
-    du -shx * .[a-zA-Z0-9_]* 2> /dev/null | egrep '^ *[0-9.]*[MG]' \
-        | sort -n > /tmp/dir-size-list
+    du -shx * .[a-zA-Z0-9_]* 2> /dev/null | egrep '^ *[0-9.]*[MG]' | \
+        sort -n > /tmp/dir-size-list
     egrep '^ *[0-9.]*M' /tmp/dir-size-list
     egrep '^ *[0-9.]*G' /tmp/dir-size-list
     rm /tmp/dir-size-list
@@ -136,3 +157,20 @@ backup () {
         echo "No such file or folder"
     fi
 }
+
+#go to dir
+gg () {
+    if [ $# -ne 1 ]; then
+        echo "Wrong number of arguments"
+    else
+        case $1 in
+            d) cd ~/dev/ ;;
+            rw) cd ~/dev/rena-web/ ;;
+            wp) cd ~/dev/workpro/ ;;
+            dl) cd ~/Downloads/ ;;
+            ad) cd ~/AppData/Roaming/ ;;
+            *) echo "'$1' is not registered" ;;
+        esac
+    fi
+}
+
