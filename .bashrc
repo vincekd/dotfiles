@@ -39,10 +39,6 @@ if [ -d ~/bin/ ]; then
     PATH=$PATH:~/bin/
 fi
 
-# if [ -d ~/dev/scripts/ ]; then
-#     PATH=$PATH:~/dev/scripts/
-# fi
-
 export PATH
 
 
@@ -53,24 +49,23 @@ LS_OPTS="--ignore='\.\.' --ignore='\.' --color=auto --group-directories-first --
 alias l="ls -Fa ${LS_OPTS}"
 alias ll="l -lho --time-style='+%Y-%m-%d %H:%M'" # --time=ctime"
 alias em="emacs -nw"
-alias emo="/cygdrive/c/Program\ Files/emacs-25.2/bin/runemacs.exe"
 #alias hist="history | grep -E -v '^ *[0-9]+ *hist +' | grep -i"
 alias hist="history | grep -i"
 alias mktar="tar -cvf"
 alias grep="grep --color=auto"
 alias q="exit"
 alias lss="ll | grep -i"
+alias cdl="cd -"
+alias gs="git status"
 
+if [[ "$OSTYPE" == "cygwin" ]]; then
+    alias emo="/cygdrive/c/Program\ Files/emacs-25.2/bin/runemacs.exe"
+    alias mysql="/cygdrive/c/Program\ Files\ \(x86\)/MySQL/MySQL\ Server\ 5.6/bin/mysql.exe"
+else
+    alias emo="emacs"
+fi
 
-# set in ~/.inputrc
-# bind '"\e[1;5C":forward-word'
-# #arrow left
-# bind '"\e[1;5D":backward-word'
-# bind '"\C-k":kill-line'
-# #down arrow
-# bind '"\e[B":history-search-forward'
-# #down up arrow
-# bind '"\e[A":history-search-backward'
+# set in keybindings in ~/.inputrc
 
 
 #

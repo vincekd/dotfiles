@@ -1,12 +1,31 @@
-;; my emacs file
+;;
+;; vincekd's .emacs
+;;
 
 (setq inhibit-startup-screen t)
+(setq inhibit-startup-echo-area-message t)
+
 ;;(defvar em-home "~/AppData/Roaming/.emacs.d")
 (defvar em-dir "~/.emacs.d/")
+(defvar is-windows (string-equal system-type "windows-nt"))
+(defvar my-font "Consolas")
+
+
 (setq user-emacs-directory em-dir)
 (setq default-directory "~/")
 
+(add-to-list 'load-path (concat em-dir "lisp/"))
+
+(setq shell-file-name "bash")
+(setenv "SHELL" shell-file-name)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+
+(set-face-attribute 'default nil :family my-font)
+
+;;
 ;; get melpa packages in package.el
+;;
 (require 'package)
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -16,19 +35,26 @@
 
 (defvar my-packages
   ;;unused packages:
-  ;;   expand-region grizzl magit gitconfig-mode gitignore-mode
-  ;;   imenu+ volatile-highlights sass-mode
-  '(js2-mode less-css-mode markdown-mode ansi-color workgroups2 diminish
-             ace-jump-mode yaml-mode whitespace whitespace-cleanup-mode
-             sws-mode jsx-mode groovy-mode smartparens syntax-subword
-             rainbow-mode python-mode scss-mode nlinum auto-complete
-             projectile flx-ido idomenu ido-vertical-mode json-mode
-             yaml-mode gradle-mode ace-window volatile-highlights
-             auto-package-update web-mode ag magit
+  ;;   grizzl gitconfig-mode gitignore-mode
+  ;;   imenu+ sass-mode helm highlight-indentation
+  ;;   indent-guide
+  '(js2-mode less-css-mode workgroups2 diminish ace-jump-mode
+             yaml-mode whitespace-cleanup-mode
+             groovy-mode smartparens syntax-subword rainbow-mode
+             python-mode scss-mode nlinum auto-complete projectile
+             flx-ido idomenu ido-vertical-mode json-mode yaml-mode
+             gradle-mode ace-window volatile-highlights auto-package-update
+             web-mode ag magit expand-region persp-mode shackle
+             golden-ratio golden-ratio-scroll-screen highlight-indent-guides
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
   "A list of packages to ensure are installed at launch.")
 
+;; conditional package adds
+(if is-windows
+    (nconc my-packages '(cygwin-mount))
+  ;;no linux-specific packages
+  )
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
@@ -43,6 +69,16 @@
     (when (not (package-installed-p p))
       (package-install p))))
 
+;;
+;; various settings
+;;
+;; cygwin bash
+(when is-windows
+  (load "setup-cygwin")
+  (require 'setup-cygwin)
+  (setq explicit-shell-file-name "C:/cygwin/bin/bash.exe"))
+
+
 (setq buffer-file-coding-system 'utf-8-unix)
 (setq default-file-name-coding-system 'utf-8-unix)
 (setq default-keyboard-coding-system 'utf-8-unix)
@@ -55,22 +91,12 @@
 (auto-package-update-maybe)
 (setq auto-package-update-interval 14)
 
-
 (setq custom-file (concat em-dir "custom.el"))
-(load custom-file :noerror)
+;; (load custom-file :noerror)
 
 ;; put backup files in single directory
 (defvar backup-file-dir (concat em-dir "backup/"))
-;; (defun my-backup-file-name (fpath)
-;;   "Return a new file path of a given file path.
-;;    If the new path's directories does not exist, create them."
-;;   (message 'fpath)
-;;   (let* (
-;;          ;;(backup-file-dir (concat em-dir "backup/"))
-;;          (filePath (replace-regexp-in-string "^[a-zA-Z]:" "" fpath )) ; remove Windows driver letter in path, for example, “C:”
-;;          (backupFilePath (replace-regexp-in-string "//" "/" (concat backup-file-dir filePath "~") )))
-;;     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-;;     backupFilePath))
+
 (setq
  backup-directory-alist `(("." . ,backup-file-dir))
  make-backup-files t    ; make backups
@@ -83,27 +109,37 @@
  ;;make-backup-file-name-function 'my-backup-file-name ;custom backup func
  )
 
+;;disable right clicks and such
+(dolist (k '([mouse-2] [down-mouse-2] [drag-mouse-2] [double-mouse-2] [triple-mouse-2]
+             [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
+             [mouse-4] [down-mouse-4] [drag-mouse-4] [double-mouse-4] [triple-mouse-4]
+             [mouse-5] [down-mouse-5] [drag-mouse-5] [double-mouse-5] [triple-mouse-5]))
+  (global-unset-key k))
+
+;; use y or n instead of yes or not
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; color theme
 ;;(load-theme 'zenburn t)
 ;;(setq custom-safe-themes t)
 (load-theme 'gruvbox t)
 
+;; (setq frame-title-format
+;;       '((:eval (if (buffer-file-name)
+;;                    (abbreviate-file-name (buffer-file-name))
+;;                  "%b"))))
+
 ;; disable tabs, use spaces
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
-;;(setq tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
 (setq css-indent-offset 2)
 (setq web-indent-offset 2)
-;;(defvaralias 'cperl-indent-level 'tab-width)
-;;(setq indent-tabs-mode nil)
-;;(setq tab-width 4)
-;; (custom-set-variables
-;;  '(tab-width 4))
-
-;;
 (set-default 'tab-always-indent 'complete)
+
+;; scroll comp output
+(setq compilation-scroll-output 1)
+(setq compilation-window-height 10)
 
 ;;no wrap lines
 (set-default 'truncate-lines t)
@@ -126,7 +162,6 @@
 (if (boundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
 
-
 ;; Parenthesis matching
 (show-paren-mode 1)
 
@@ -135,17 +170,18 @@
 
 (setq require-final-newline t)
 
-;; show line numbers
-(global-nlinum-mode 1)
 
-;;(semantic-mode 1)
+(setq save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      visible-bell t
+      load-prefer-newer t
+      ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;;cygwin bash
-(setq explicit-shell-file-name "C:/cygwin/bin/bash.exe")
-(setq shell-file-name "bash")
-;;(setq shell-command-switch "-ic")
-(setenv "SHELL" shell-file-name)
-
+;;
+;; Functions
+;;
 ;; set Ctrl-a to jump between beginning of line and beginning of code
 (defun my--smart-beginning-of-line ()
   "Move point to `beginning-of-line'. If repeat command it cycle
@@ -170,13 +206,39 @@ position between last non-whitespace and `end-of-line'."
   "Dummy function that does nothing"
   (interactive "^"))
 
+(defun recentf-ido-find-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
+
+(defun kill-other-buffers ()
+  "Kill all buffers but the current one. Don't mess with special buffers."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (or (eql buffer (current-buffer)) (not (buffer-file-name buffer)))
+      (kill-buffer buffer))))
+
+
 ;; defines key overrides
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-a") 'my--smart-beginning-of-line)
     (define-key map (kbd "C-e") 'my--smart-end-of-line)
-    (define-key map (kbd "C-S-O") 'projectile-find-file)
     (define-key map (kbd "C-t") 'no-action) ;get rid of char swapping
+    (define-key map (kbd "M-j") (lambda () (interactive) (join-line -1)))
+    (define-key map (kbd "M-/") 'hippie-expand)
+    (define-key map (kbd "C-x C-b") 'ibuffer)
+    (define-key map (kbd "C-s") 'isearch-forward-regexp)
+    (define-key map (kbd "C-r") 'isearch-backward-regexp)
+    (define-key map (kbd "C-M-s") 'isearch-forward)
+    (define-key map (kbd "C-M-r") 'isearch-backward)
+    (define-key map (kbd "C-c C-v") 'hs-toggle-hiding)
+    (define-key map (kbd "C-S-O") 'recentf-ido-find-file)
+    (define-key map (kbd "C-S-R") 'projectile-find-file)
+    (define-key map (kbd "C-S-f") 'projectile-ag)
+    (define-key map (kbd "C-c k") 'kill-other-buffers)
     map)
   "my-keys-minor-mode keymap.")
 
@@ -187,44 +249,110 @@ position between last non-whitespace and `end-of-line'."
 
 (my-keys-minor-mode 1)
 
+(defmacro rename-modeline (package-name mode new-name)
+  `(eval-after-load ,package-name
+     '(defadvice ,mode (after rename-modeline activate)
+        (setq mode-name ,new-name))))
 
 ;;
 ;; MODE CONFIGS
 ;;
 
-(require 'whitespace)
-(setq whitespace-line-column 100)
-;;space-mark newline-mark
-(setq whitespace-style (quote (face lines-tail trailing tabs newline tab-mark)))
-(setq whitespace-display-mappings
-      ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-      '(
-        (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-        (newline-mark 10 [182 10]) ; LINE FEED,
-        (tab-mark 9 [9655 9] [92 9]) ; tab
-        ))
+(require 'shackle)
+;;(setq shackle-default-rule '(:select t))
+(setq shackle-rules
+      '((compilation-mode :noselect t)
+        ("*Ido Completions*" :noselect t :other t)
+        ("*eshell*" :select t :same t)
+        ("*Shell Command Output*" :noselect t)
+        ("*shell*" :select t :same t)
+        ("*Messages*" :noselect t :inhibit-window-quit t :other t)
+        ("*Metahelp*" :select t :same t)
+        ("*Help*" :select t :same t)
+        ("*Completions*" :noselect t :other t)
+        ("*Warnings*" :noselect t :other t)
+        ("*Compile-Log*" :noselect t :other t)
+        (magit-status-mode :select t :inhibit-window-quit t :same t)
+        (magit-log-mode :select t :inhibit-window-quit t :same t)
+        ;;projectile search
+        ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
+(shackle-mode 1)
 
-(global-whitespace-mode t)
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 
-;; css/scss/sass editing
-;;(autoload 'sass-mode "sass-mode")
-;;(add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
-(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
-(setq scss-compile-at-save nil)
-(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
-;;(add-hook 'sass-mode-hook 'my-enable-rainbow-mode)
-(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
+(require 'golden-ratio)
+;; add ace-window jump to trigger commands
+(nconc golden-ratio-extra-commands '(ace-window))
+;;(setq golden-ratio-auto-scale t)
+(golden-ratio-mode 1)
+
+(require 'golden-ratio-scroll-screen)
+(global-set-key [remap scroll-down-command] 'golden-ratio-scroll-screen-down)
+(global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up)
+
+
+;;
+;; whitespace mode conflicts with highlight-indent-guides-mode
+;; (require 'whitespace)
+;; ;; disable highlighting lines over certain limit
+;; (setq whitespace-line-column -1)
+;; ;; (setq whitespace-line-column 100)
+;; ;;space-mark newline-mark
+;; (setq whitespace-style (quote (face lines-tail trailing tabs newline tab-mark)))
+;; ;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
+;; (setq inhibit-compacting-font-caches t)
+;; (setq whitespace-display-mappings
+;;       ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+;;       '(
+;;         (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+;;         (newline-mark 10 [182 10]) ; LINE FEED,
+;;         (tab-mark 9 [9655 9] [92 9]) ; tab
+;;         ))
+;; (global-whitespace-mode t)
+
+
+(global-whitespace-cleanup-mode 1)
+
+
 (defun my-enable-rainbow-mode ()
   "turn on rainbox mode"
   (rainbow-mode 1)
   ;; hide rainbow mode from mode line
   (diminish 'rainbow-mode))
 
+;; web editing
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
+(setq scss-compile-at-save nil)
+(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
+(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
 
-;; (autoload 'json-mode "json-mode")
-;; (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+(setq
+ ;; js version (2.0)
+ js2-language-version 200
+ ;; ignore global libraries
+ js2-global-externs '("jQuery" "$" "_" "angular")
+ ;; include common keywords
+ js2-include-browser-externs t
+ js2-include-node-externs t
+ ;; exclude rhino (mozilla js compiler) keywords
+ js2-include-rhino-externs nil)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
+(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+(rename-modeline "js2-mode" js2-mode "JS2")
+
+(autoload 'json-mode "json-mode")
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+
+;; groovy mode
+(autoload 'groovy-mode "groovy-mode")
+(add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
+(add-to-list 'auto-mode-alist '(".gradle" . groovy-mode))
 
 
 (require 'syntax-subword)
@@ -236,15 +364,17 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; projectile stuff
-(projectile-mode 1)
-;; (setq projectile-mode-line
-;;       '(:eval (format " P[%s]" (projectile-project-name))))
-(setq projectile-mode-line nil)
-;;set find-file to C-O (done in my-keys-minor-mode)
+(require 'projectile)
+(setq projectile-mode-line
+      '(:eval (format " Proj[%s]" (projectile-project-name))))
+;;(setq projectile-mode-line nil)
+;; set find-file to C-O (done in my-keys-minor-mode)
 ;;(setq projectile-completion-system 'grizzl)
 ;;(setq projectile-indexing-method 'alien)
+(projectile-mode 1)
 
 
+;; ido search, flx
 (require 'flx-ido)
 (ido-mode 1)
 (ido-everywhere 1)
@@ -252,11 +382,6 @@ position between last non-whitespace and `end-of-line'."
 (ido-vertical-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
-
-
-;; (require 'imenu+)
-;; (setq imenup-sort-ignores-case-flag t)
-;; (setq imenup-ignore-comments-flag t)
 
 
 (autoload 'idomenu "idomenu" nil t)
@@ -276,13 +401,6 @@ position between last non-whitespace and `end-of-line'."
 (define-key global-map (kbd "M-p") 'ace-window)
 
 
-;; (require 'expand-region)
-;; (global-set-key (kbd "C-=") 'er/expand-region)
-
-
-(global-whitespace-cleanup-mode 1)
-
-
 ;; smart parens
 (require 'smartparens-config)
 (smartparens-global-mode 1)
@@ -293,8 +411,18 @@ position between last non-whitespace and `end-of-line'."
 ;;(global-set-key (kbd "C-c g s") 'magit-status)
 
 
+;; not working in emacs 25.2
 ;; (require 'volatile-highlights)
 ;; (volatile-highlights-mode t)
+
+
+;; persp mode
+;;(define-key persp-key-map (kbd "C-c C-p") ...)
+;; (setq persp-keymap-prefix (kbd "C-c C-p"))
+;; (with-eval-after-load "persp-mode-autoloads"
+;;       (setq wg-morph-on nil) ;; switch off animation
+;;       (setq persp-autokill-buffer-on-remove 'kill-weak)
+;;       (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 
 
 (require 'workgroups2)
@@ -303,13 +431,14 @@ position between last non-whitespace and `end-of-line'."
 ;;(setq wg-mode-line-display-on nil)
 (setq wg-emacs-exit-save-behavior 'ask) ; Options: 'save 'ask nil
 (setq wg-workgroups-mode-exit-save-behavior 'ask) ; Options: 'save 'ask nil
+;;(setq wg-morph-on nil)
 (setq wg-mode-line-decor-left-brace "["
       wg-mode-line-decor-right-brace "]"
       wg-mode-line-decor-divider ":")
 (define-key global-map (kbd "C-c z") 'workgroups-mode)
-;;(workgroups-mode 1)
 
 
+;; diminish stuff
 (require 'diminish)
 (diminish 'smartparens-mode nil)
 (diminish 'auto-complete-mode nil)
@@ -317,6 +446,10 @@ position between last non-whitespace and `end-of-line'."
 (diminish 'global-whitespace-mode nil)
 (diminish 'whitespace-cleanup-mode nil)
 (diminish 'rainbow-mode)
+;;(diminish 'volatile-highlights-mode nil)
+(diminish 'highlight-indentation-mode)
+(diminish 'highlight-indentation-current-column-mode)
+(diminish 'golden-ratio-mode nil)
 (add-hook 'workgroups-mode-hook 'my-diminish-hook)
 (defun my-diminish-hook ()
   "diminish workgroups when toggled"
@@ -330,3 +463,49 @@ position between last non-whitespace and `end-of-line'."
 (setq web-mode-enable-auto-expanding t)
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-auto-close-style 2)
+
+
+;; make unique names of tabs and shit
+(require 'uniquify)
+
+
+(save-place-mode 1)
+(setq save-place-file (concat em-dir "saved-places"))
+
+
+;; columns
+(column-number-mode 1)
+(require 'highlight-indent-guides)
+(setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-character ?\|)
+;; (setq highlight-indent-guides-auto-enabled nil)
+;; (set-face-background 'highlight-indent-guides-odd-face "white")
+;; (set-face-background 'highlight-indent-guides-even-face "gray")
+;; (set-face-foreground 'highlight-indent-guides-character-face "white")
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
+
+;; show line numbers
+(require 'nlinum)
+;;(global-linum-mode 1)
+;;(global-nlinum-mode 1)
+(add-hook 'prog-mode-hook 'nlinum-mode)
+
+
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+
+
+;; add recently opened files to the menu
+(require 'recentf)
+(setq recentf-max-saved-items 200
+      recentf-max-menu-items 20)
+(recentf-mode +1)
+
+
+;; colorize compilation output
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region (point-min) (point-max))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
