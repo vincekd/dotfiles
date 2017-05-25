@@ -27,8 +27,11 @@
 ;; get melpa packages in package.el
 ;;
 (require 'package)
-(add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+             ("marmalade" . "http://marmalade-repo.org/packages/")
+             ("melpa" . "http://melpa.milkbox.net/packages/")))
+;; (add-to-list 'package-archives
+;;   '("melpa" . "http: //melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 (require 'cl)
@@ -37,15 +40,16 @@
   ;;unused packages:
   ;;   grizzl gitconfig-mode gitignore-mode
   ;;   imenu+ sass-mode helm highlight-indentation
-  ;;   indent-guide
+  ;;   indent-guide volatile-highlights persp-mode
+  ;;   company company-shell company-web company-flx company-dict
   '(js2-mode less-css-mode workgroups2 diminish ace-jump-mode
-             yaml-mode whitespace-cleanup-mode
+             yaml-mode whitespace-cleanup-mode popup ag
              groovy-mode smartparens syntax-subword rainbow-mode
-             python-mode scss-mode nlinum auto-complete projectile
+             python-mode scss-mode nlinum projectile auto-complete
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
-             gradle-mode ace-window volatile-highlights auto-package-update
-             web-mode ag magit expand-region persp-mode shackle
-             golden-ratio golden-ratio-scroll-screen highlight-indent-guides
+             gradle-mode ace-window auto-package-update flycheck
+             web-mode magit expand-region shackle golden-ratio
+             golden-ratio-scroll-screen highlight-indent-guides
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
   "A list of packages to ensure are installed at launch.")
@@ -239,6 +243,7 @@ position between last non-whitespace and `end-of-line'."
     (define-key map (kbd "C-S-R") 'projectile-find-file)
     (define-key map (kbd "C-S-f") 'projectile-ag)
     (define-key map (kbd "C-c k") 'kill-other-buffers)
+    ;;(define-key map (kbd "C-\t") 'company-complete-common)
     map)
   "my-keys-minor-mode keymap.")
 
@@ -370,7 +375,7 @@ position between last non-whitespace and `end-of-line'."
 ;;(setq projectile-mode-line nil)
 ;; set find-file to C-O (done in my-keys-minor-mode)
 ;;(setq projectile-completion-system 'grizzl)
-;;(setq projectile-indexing-method 'alien)
+(setq projectile-indexing-method 'alien)
 (projectile-mode 1)
 
 
@@ -442,18 +447,20 @@ position between last non-whitespace and `end-of-line'."
 (require 'diminish)
 (diminish 'smartparens-mode nil)
 (diminish 'auto-complete-mode nil)
-;;(diminish 'whitespace-mode)
+;;(diminish 'whitespace-mode nil)
 (diminish 'global-whitespace-mode nil)
 (diminish 'whitespace-cleanup-mode nil)
-(diminish 'rainbow-mode)
+;;(diminish 'rainbow-mode nil)
 ;;(diminish 'volatile-highlights-mode nil)
-(diminish 'highlight-indentation-mode)
-(diminish 'highlight-indentation-current-column-mode)
+;;(diminish 'highlight-indentation-mode)
+;;(diminish 'highlight-indentation-current-column-mode)
 (diminish 'golden-ratio-mode nil)
 (add-hook 'workgroups-mode-hook 'my-diminish-hook)
+(add-hook 'prog-mode-hook 'my-diminish-hook)
 (defun my-diminish-hook ()
   "diminish workgroups when toggled"
-    (diminish 'workgroups-mode nil))
+  (diminish 'workgroups-mode nil)
+  (diminish 'hs-minor-mode nil))
 
 
 ;;(require 'web-mode)
@@ -478,11 +485,10 @@ position between last non-whitespace and `end-of-line'."
 (require 'highlight-indent-guides)
 (setq highlight-indent-guides-method 'character)
 (setq highlight-indent-guides-character ?\|)
-;; (setq highlight-indent-guides-auto-enabled nil)
-;; (set-face-background 'highlight-indent-guides-odd-face "white")
-;; (set-face-background 'highlight-indent-guides-even-face "gray")
-;; (set-face-foreground 'highlight-indent-guides-character-face "white")
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;;(require 'indent-guide)
+;;(setq indent-guide-recursive t)
+;;(indent-guide-global-mode 1)
 
 
 ;; show line numbers
@@ -509,3 +515,11 @@ position between last non-whitespace and `end-of-line'."
   (ansi-color-apply-on-region (point-min) (point-max))
   (toggle-read-only))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+
+;; (require 'company)
+;; ;;(add-hook 'after-init-hook 'global-company-mode)
+;; (setq company-idle-delay 0)
+;; (global-company-mode 1)
+;; (require 'flycheck)
+;; (add-hook 'prog-mode-hook 'flycheck-mode)
