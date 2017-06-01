@@ -10,11 +10,14 @@
 (defvar is-windows (string-equal system-type "windows-nt"))
 (defvar my-font "Consolas")
 
+(defvar org-mode-dir "~/notes/")
 
 (setq user-emacs-directory em-dir)
 (setq default-directory "~/")
 
 (add-to-list 'load-path (concat em-dir "lisp/"))
+
+(setq exec-path (append exec-path '("~/node_modules/eslint")))
 
 (setq shell-file-name "bash")
 (setenv "SHELL" shell-file-name)
@@ -148,6 +151,10 @@
 ;;no wrap lines
 (set-default 'truncate-lines t)
 
+;; save place in files
+(save-place-mode 1)
+(setq save-place-file (concat em-dir "saved-places"))
+
 ;; replace highlighted text when possible
 (delete-selection-mode 1)
 
@@ -175,6 +182,7 @@
 (setq require-final-newline t)
 
 
+;; general emacs
 (setq save-interprogram-paste-before-kill t
       apropos-do-all t
       mouse-yank-at-point t
@@ -299,15 +307,15 @@ position between last non-whitespace and `end-of-line'."
 (global-set-key [remap scroll-up-command] 'golden-ratio-scroll-screen-up)
 
 
-;;
+;; whitespace mode y'all
 ;; whitespace mode conflicts with highlight-indent-guides-mode
-;; (require 'whitespace)
-;; ;; disable highlighting lines over certain limit
-;; (setq whitespace-line-column -1)
-;; ;; (setq whitespace-line-column 100)
-;; ;;space-mark newline-mark
-;; (setq whitespace-style (quote (face lines-tail trailing tabs newline tab-mark)))
-;; ;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
+(require 'whitespace)
+;; disable highlighting lines over certain limit
+(setq whitespace-line-column -1)
+;; (setq whitespace-line-column 100)
+;;space-mark newline-mark
+(setq whitespace-style (quote (face lines-tail trailing tabs newline tab-mark)))
+;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
 ;; (setq inhibit-compacting-font-caches t)
 ;; (setq whitespace-display-mappings
 ;;       ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
@@ -316,10 +324,12 @@ position between last non-whitespace and `end-of-line'."
 ;;         (newline-mark 10 [182 10]) ; LINE FEED,
 ;;         (tab-mark 9 [9655 9] [92 9]) ; tab
 ;;         ))
-;; (global-whitespace-mode t)
+;;(global-whitespace-mode t)
 
 
-(global-whitespace-cleanup-mode 1)
+;;(global-whitespace-cleanup-mode 1)
+(require 'whitespace-cleanup-mode)
+(add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
 
 (defun my-enable-rainbow-mode ()
@@ -329,11 +339,24 @@ position between last non-whitespace and `end-of-line'."
   (diminish 'rainbow-mode))
 
 ;; web editing
-(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.sass$" . scss-mode))
 (setq scss-compile-at-save nil)
 (add-hook 'css-mode-hook 'my-enable-rainbow-mode)
 (add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
+
+
+;; syntax checker
+(require 'flycheck)
+(setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
+(setq flycheck-idle-change-delay 2)
+(flycheck-add-mode 'javascript-eslint 'js2-mode)
+;;(flycheck-add-mode 'groovy 'groovy-mode)
+;;(add-hook 'prog-mode-hook 'flycheck-mode)
+(add-hook 'js2-mode-hook 'flycheck-mode)
+;;(add-hook 'groovy-mode-hook 'flycheck-mode)
+(add-hook 'flycheck-mode-hook #'(lambda () (diminish 'flycheck-mode)))
+
 
 (setq
  ;; js version (2.0)
@@ -344,20 +367,23 @@ position between last non-whitespace and `end-of-line'."
  js2-include-browser-externs t
  js2-include-node-externs t
  ;; exclude rhino (mozilla js compiler) keywords
- js2-include-rhino-externs nil)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+ js2-include-rhino-externs nil
+ js2-mode-show-parse-errors nil
+ js2-mode-show-strict-warnings nil
+ )
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
-(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+;;(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (rename-modeline "js2-mode" js2-mode "JS2")
 
 (autoload 'json-mode "json-mode")
-(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
 
 ;; groovy mode
 (autoload 'groovy-mode "groovy-mode")
-(add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
-(add-to-list 'auto-mode-alist '(".gradle" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '(".gradle$" . groovy-mode))
 
 
 (require 'syntax-subword)
@@ -389,11 +415,11 @@ position between last non-whitespace and `end-of-line'."
 (setq ido-use-faces nil)
 
 
-(autoload 'idomenu "idomenu" nil t)
-(global-set-key (kbd "C-x C-g") 'idomenu)
+;; (autoload 'idomenu "idomenu" nil t)
+;; (global-set-key (kbd "C-x C-g") 'idomenu)
 
 
-;; ace jump mode
+;; ;; ace jump mode
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 (autoload
   'ace-jump-mode-pop-mark
@@ -406,9 +432,10 @@ position between last non-whitespace and `end-of-line'."
 (define-key global-map (kbd "M-p") 'ace-window)
 
 
-;; smart parens
+;; ;; smart parens
 (require 'smartparens-config)
-(smartparens-global-mode 1)
+;;(smartparens-global-mode 1)
+(add-hook 'prog-mode-hook 'smartparens-mode)
 
 
 ;;git commands (doesn't work very well)
@@ -465,7 +492,8 @@ position between last non-whitespace and `end-of-line'."
 
 ;;(require 'web-mode)
 (autoload 'web-mode "web-mode")
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-enable-auto-expanding t)
 (setq web-mode-enable-current-element-highlight t)
@@ -476,16 +504,23 @@ position between last non-whitespace and `end-of-line'."
 (require 'uniquify)
 
 
-(save-place-mode 1)
-(setq save-place-file (concat em-dir "saved-places"))
+;;org modes
+(autoload 'org-mode "org-mode")
+;;(require 'org)
+;; (define-key global-map "\C-cl" 'org-store-link)
+;; (define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(setq org-agenda-files (list (concat org-mode-dir "work.org")
+                             (concat org-mode-dir "life.org")))
 
 
 ;; columns
 (column-number-mode 1)
-(require 'highlight-indent-guides)
-(setq highlight-indent-guides-method 'character)
-(setq highlight-indent-guides-character ?\|)
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;; (require 'highlight-indent-guides)
+;; (setq highlight-indent-guides-method 'character)
+;; (setq highlight-indent-guides-character ?\|)
+;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(require 'indent-guide)
 ;;(setq indent-guide-recursive t)
 ;;(indent-guide-global-mode 1)
@@ -498,28 +533,29 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'prog-mode-hook 'nlinum-mode)
 
 
+;; hide/show (keybind in my-keys)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 
 
-;; add recently opened files to the menu
+;; ;; add recently opened files to the menu
 (require 'recentf)
 (setq recentf-max-saved-items 200
       recentf-max-menu-items 20)
 (recentf-mode +1)
 
 
-;; colorize compilation output
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region (point-min) (point-max))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+;; ;; colorize compilation output
+;; (require 'ansi-color)
+;; (defun colorize-compilation-buffer ()
+;;   (toggle-read-only)
+;;   (ansi-color-apply-on-region (point-min) (point-max))
+;;   (toggle-read-only))
+;; (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 
 ;; (require 'company)
 ;; ;;(add-hook 'after-init-hook 'global-company-mode)
 ;; (setq company-idle-delay 0)
 ;; (global-company-mode 1)
-;; (require 'flycheck)
-;; (add-hook 'prog-mode-hook 'flycheck-mode)
+
+

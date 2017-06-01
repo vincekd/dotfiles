@@ -59,7 +59,7 @@ alias cdl="cd -"
 alias gs="git status"
 
 if [[ "$OSTYPE" == "cygwin" ]]; then
-    alias emo="/cygdrive/c/Program\ Files/emacs-25.2/bin/runemacs.exe"
+    alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
     alias mysql="/cygdrive/c/Program\ Files\ \(x86\)/MySQL/MySQL\ Server\ 5.6/bin/mysql.exe"
 else
     alias emo="emacs"
@@ -160,6 +160,7 @@ gg () {
     else
         case $1 in
             d) cd ~/dev/ ;;
+            n) cd ~/notes/ ;;
             rw) cd ~/dev/rena-web/ ;;
             wp) cd ~/dev/workpro/ ;;
             dl) cd ~/Downloads/ ;;
