@@ -9,14 +9,13 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "globals": {
-        "_": true
-    },
+    "globals": {},
     "rules": {
         "no-console": 0,
         "indent": [
             "warn",
-            4
+            4,
+            {"ArrayExpression": "first"}
         ],
         "linebreak-style": [
             "warn",

@@ -45,7 +45,7 @@ export PATH
 #
 # aliases
 #
-LS_OPTS="--ignore='\.\.' --ignore='\.' --color=auto --group-directories-first --sort=time"
+export LS_OPTS="--ignore='\.\.' --ignore='\.' --color=auto --group-directories-first --sort=time"
 alias l="ls -Fa ${LS_OPTS}"
 alias ll="l -lho --time-style='+%Y-%m-%d %H:%M'" # --time=ctime"
 alias em="emacs -nw"
@@ -60,7 +60,6 @@ alias gs="git status"
 
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
-    alias mysql="/cygdrive/c/Program\ Files\ \(x86\)/MySQL/MySQL\ Server\ 5.6/bin/mysql.exe"
 else
     alias emo="emacs"
 fi

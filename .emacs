@@ -31,7 +31,7 @@
 ;;
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-             ("marmalade" . "http://marmalade-repo.org/packages/")
+             ;;("marmalade" . "http://marmalade-repo.org/packages/")
              ("melpa" . "http://melpa.milkbox.net/packages/")))
 ;; (add-to-list 'package-archives
 ;;   '("melpa" . "http: //melpa.milkbox.net/packages/") t)
@@ -41,18 +41,19 @@
 
 (defvar my-packages
   ;;unused packages:
-  ;;   grizzl gitconfig-mode gitignore-mode
+  ;;   grizzl gitconfig-mode gitignore-mode diminish
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  '(js2-mode less-css-mode workgroups2 diminish ace-jump-mode
+  ;;   highlight-indent-guides
+  '(js2-mode less-css-mode workgroups2 ace-jump-mode
              yaml-mode whitespace-cleanup-mode popup ag
              groovy-mode smartparens syntax-subword rainbow-mode
              python-mode scss-mode nlinum projectile auto-complete
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
              gradle-mode ace-window auto-package-update flycheck
              web-mode magit expand-region shackle golden-ratio
-             golden-ratio-scroll-screen highlight-indent-guides
+             golden-ratio-scroll-screen dired-quick-sort smart-mode-line
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
   "A list of packages to ensure are installed at launch.")
@@ -86,6 +87,28 @@
   (setq explicit-shell-file-name "C:/cygwin/bin/bash.exe"))
 
 
+;; auto update packages every 14 days
+(require 'auto-package-update)
+(auto-package-update-maybe)
+(setq auto-package-update-interval 14)
+
+;;
+;; general emacs
+;;
+(setq transient-mark-mode t ;; enable visual feedback on selections
+      scroll-step 1 ;; scroll line by line
+      require-final-newline t
+      save-interprogram-paste-before-kill t
+      ;; scroll comp output
+      compilation-scroll-output 1
+      compilation-window-height 10
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      visible-bell t
+      load-prefer-newer t
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+
 (setq buffer-file-coding-system 'utf-8-unix)
 (setq default-file-name-coding-system 'utf-8-unix)
 (setq default-keyboard-coding-system 'utf-8-unix)
@@ -93,17 +116,11 @@
 (setq default-sendmail-coding-system 'utf-8-unix)
 (setq default-terminal-coding-system 'utf-8-unix)
 
-;; auto update packages every 14 days
-(require 'auto-package-update)
-(auto-package-update-maybe)
-(setq auto-package-update-interval 14)
-
 (setq custom-file (concat em-dir "custom.el"))
 ;; (load custom-file :noerror)
 
 ;; put backup files in single directory
 (defvar backup-file-dir (concat em-dir "backup/"))
-
 (setq
  backup-directory-alist `(("." . ,backup-file-dir))
  make-backup-files t    ; make backups
@@ -136,18 +153,6 @@
 ;;                    (abbreviate-file-name (buffer-file-name))
 ;;                  "%b"))))
 
-;; disable tabs, use spaces
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(defvaralias 'c-basic-offset 'tab-width)
-(setq css-indent-offset 2)
-(setq web-indent-offset 2)
-(set-default 'tab-always-indent 'complete)
-
-;; scroll comp output
-(setq compilation-scroll-output 1)
-(setq compilation-window-height 10)
-
 ;;no wrap lines
 (set-default 'truncate-lines t)
 
@@ -161,12 +166,6 @@
 ;; font-lock mode enables syntax highlighting
 (global-font-lock-mode 1)
 
-;; enable visual feedback on selections
-(setq transient-mark-mode t)
-
-;; scroll line by line
-(setq scroll-step 1)
-
 ;; disable gui
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -178,18 +177,6 @@
 
 ;; highlight current line
 (global-hl-line-mode +1)
-
-(setq require-final-newline t)
-
-
-;; general emacs
-(setq save-interprogram-paste-before-kill t
-      apropos-do-all t
-      mouse-yank-at-point t
-      require-final-newline t
-      visible-bell t
-      load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;;
 ;; Functions
@@ -268,8 +255,80 @@ position between last non-whitespace and `end-of-line'."
         (setq mode-name ,new-name))))
 
 ;;
+;; Personal style
+;;
+;; (setq c-offsets-alist '(
+;;                         (brace-list-entry . [1])
+;;                         (brace-list-open . [1])
+;;                         (brace-list-close . [0])))
+;; (c-add-style "my-code-style" '(
+;;                                (brace-list-entry . +)))
+;; Create my personal style.
+;; (defconst my-code-style
+;;   '(
+;;     (c-tab-always-indent        . t)
+;;     (c-comment-only-line-offset . 4)
+;;     ;; (c-hanging-braces-alist     . ((substatement-open after)
+;;     ;;                                (brace-list-open)))
+;;     ;; (c-hanging-colons-alist     . ((member-init-intro before)
+;;     ;;                                (inher-intro)
+;;     ;;                                (case-label after)
+;;     ;;                                (label after)
+;;     ;;                                (access-label after)))
+;;     (c-cleanup-list . (scope-operator
+;;                        empty-defun-braces
+;;                        defun-close-semi))
+;;     (c-offsets-alist . ((brace-list-entry . +)
+;;                         ;; (arglist-close . c-lineup-arglist)
+;;                         ;; (substatement-open . 0)
+;;                         ;; (case-label        . 4)
+;;                         ;; (block-open        . 0)
+;;                         ;; (knr-argdecl-intro . -)
+;;                         ))
+;;     (c-echo-syntactic-information-p . t))
+;;   "My C Programming Style")
+
+;; (c-add-style "my-code-style" my-code-style)
+
+;; disable tabs, use spaces
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(defvaralias 'c-basic-offset 'tab-width)
+(setq css-indent-offset 2)
+(setq web-indent-offset 2)
+(set-default 'tab-always-indent 'complete)
+
+;; Customizations for all modes in CC Mode.
+;; (defun my-c-mode-common-hook ()
+;;   ;; set my personal style for the current buffer
+;;   (c-set-style "my-code-style")
+;;   (message "opening c-mode-common")
+;;   ;; other customizations
+;;   ;; (setq tab-width 4
+
+;;   ;;       ;; this will make sure spaces are used instead of tabs
+;;   ;;       indent-tabs-mode nil)
+;;   ;; we like auto-newline, but not hungry-delete
+;;   ;; (c-toggle-auto-newline 1)
+;;   )
+;; (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+
+
+;;
 ;; MODE CONFIGS
 ;;
+
+(require 'smart-mode-line)
+(setq sml/shorten-directory t)
+(setq sml/shorten-modes t)
+;;(add-to-list 'sml/replacer-regexp-list '("^~/dev/" ":DEV:") t)
+(add-to-list 'sml/replacer-regexp-list '("^~/dev/workpro/main-application/" ":WP:") t)
+(setq rm-whitelist " *Proj\\[.*")
+;;(add-to-list 'sml/replacer-regexp-list '("^:Git:\(.*\)/src/main/java/" ":G/\1/SMJ:") t)
+(sml/setup)
+;;(smart-mode-line-enable)
+
 
 (require 'shackle)
 ;;(setq shackle-default-rule '(:select t))
@@ -334,13 +393,11 @@ position between last non-whitespace and `end-of-line'."
 
 (defun my-enable-rainbow-mode ()
   "turn on rainbox mode"
-  (rainbow-mode 1)
-  ;; hide rainbow mode from mode line
-  (diminish 'rainbow-mode))
+  (rainbow-mode 1))
 
 ;; web editing
-(add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
-(add-to-list 'auto-mode-alist '("\\.sass$" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
 (setq scss-compile-at-save nil)
 (add-hook 'css-mode-hook 'my-enable-rainbow-mode)
 (add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
@@ -351,13 +408,15 @@ position between last non-whitespace and `end-of-line'."
 (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
 (setq flycheck-idle-change-delay 2)
 (flycheck-add-mode 'javascript-eslint 'js2-mode)
+(flycheck-add-mode 'javascript-eslint 'js-mode)
 ;;(flycheck-add-mode 'groovy 'groovy-mode)
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
+(add-hook 'js-mode-hook 'flycheck-mode)
 ;;(add-hook 'groovy-mode-hook 'flycheck-mode)
-(add-hook 'flycheck-mode-hook #'(lambda () (diminish 'flycheck-mode)))
 
 
+(autoload 'js2-mode "js2-mode")
 (setq
  ;; js version (2.0)
  js2-language-version 200
@@ -370,20 +429,27 @@ position between last non-whitespace and `end-of-line'."
  js2-include-rhino-externs nil
  js2-mode-show-parse-errors nil
  js2-mode-show-strict-warnings nil
+ js-switch-indent-offset 4
  )
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
 ;;(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (rename-modeline "js2-mode" js2-mode "JS2")
 
+
+;;(add-hook 'js-mode-hook 'my-enable-rainbow-mode)
+;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+;;(rename-modeline "js-mode" js-mode "JS")
+
+
 (autoload 'json-mode "json-mode")
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 
 
 ;; groovy mode
 (autoload 'groovy-mode "groovy-mode")
-(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
-(add-to-list 'auto-mode-alist '(".gradle$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
+(add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
 
 
 (require 'syntax-subword)
@@ -432,10 +498,13 @@ position between last non-whitespace and `end-of-line'."
 (define-key global-map (kbd "M-p") 'ace-window)
 
 
-;; ;; smart parens
+;; - layout stuff
 (require 'smartparens-config)
 ;;(smartparens-global-mode 1)
 (add-hook 'prog-mode-hook 'smartparens-mode)
+;; (add-hook 'prog-mode-hook 'electric-format-mode)
+;; (add-hook 'prog-mode-hook 'electric-pair-mode)
+;; (add-hook 'prog-mode-hook 'electric-quote-mode)
 
 
 ;;git commands (doesn't work very well)
@@ -470,30 +539,10 @@ position between last non-whitespace and `end-of-line'."
 (define-key global-map (kbd "C-c z") 'workgroups-mode)
 
 
-;; diminish stuff
-(require 'diminish)
-(diminish 'smartparens-mode nil)
-(diminish 'auto-complete-mode nil)
-;;(diminish 'whitespace-mode nil)
-(diminish 'global-whitespace-mode nil)
-(diminish 'whitespace-cleanup-mode nil)
-;;(diminish 'rainbow-mode nil)
-;;(diminish 'volatile-highlights-mode nil)
-;;(diminish 'highlight-indentation-mode)
-;;(diminish 'highlight-indentation-current-column-mode)
-(diminish 'golden-ratio-mode nil)
-(add-hook 'workgroups-mode-hook 'my-diminish-hook)
-(add-hook 'prog-mode-hook 'my-diminish-hook)
-(defun my-diminish-hook ()
-  "diminish workgroups when toggled"
-  (diminish 'workgroups-mode nil)
-  (diminish 'hs-minor-mode nil))
-
-
 ;;(require 'web-mode)
 (autoload 'web-mode "web-mode")
-(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-enable-auto-expanding t)
 (setq web-mode-enable-current-element-highlight t)
@@ -510,7 +559,7 @@ position between last non-whitespace and `end-of-line'."
 ;; (define-key global-map "\C-cl" 'org-store-link)
 ;; (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (setq org-agenda-files (list (concat org-mode-dir "work.org")
                              (concat org-mode-dir "life.org")))
 
@@ -553,9 +602,19 @@ position between last non-whitespace and `end-of-line'."
 ;; (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 
-;; (require 'company)
-;; ;;(add-hook 'after-init-hook 'global-company-mode)
-;; (setq company-idle-delay 0)
-;; (global-company-mode 1)
+;; DIRED setup
+(require 'dired-x)
+(require 'dired-quick-sort)
+(setq ls-lisp-use-insert-directory-program t)
+;;(defvar ls-opts (shell-command-to-string ". ~/.bashrc; echo -n $LS_OPTS"))
+;; from .bashrc (probably a better way to get this) (above)
+(setq dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$"))
+(setq dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
+(dired-quick-sort-setup)
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (dired-hide-details-mode)
+            (dired-sort-toggle-or-edit)
+            (dired-omit-mode)))
 
-
+;; TODO: shorten paths
