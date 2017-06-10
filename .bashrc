@@ -83,6 +83,7 @@ BLUE='\e[1;34m'
 YELLOW='\e[1;33m'
 WHITE='\e[0;37m'
 RED='\e[0;31m'
+GREEN="\e[0;32m"
 #NOCOL="\e]0;"
 
 # prompt
@@ -93,8 +94,16 @@ EXTRA="\[${YELLOW}\][\@]"
 WDIR="\[${BLUE}\]\w"
 PROMPT="\[${YELLOW}\]>"
 CURCMD="\[${WHITE}\]"
-PS1="${WINTITLE} ${NAME} ${EXTRA} ${WDIR} \n ${PROMPT} ${CURCMD}"
-PS2='>'
+parse_git_branch () {
+    GITBRANCH=$(git branch 2> /dev/null | grep "*" | sed 's/\* *\(.*\)/\1/')
+    if [ ! -z "$GITBRANCH" ]; then
+        GITBRANCH="(${GITBRANCH})"
+    fi
+    echo "$GITBRANCH"
+}
+
+export PS1="${WINTITLE} ${NAME} ${EXTRA} ${WDIR} ${GREEN}\$(parse_git_branch)\n ${PROMPT} ${CURCMD}"
+export PS2='>'
 
 # window title (set in PS1)
 #echo -ne "\e]0;V's Bash Shell\a"

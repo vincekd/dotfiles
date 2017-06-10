@@ -46,8 +46,8 @@
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
   ;;   highlight-indent-guides
-  '(js2-mode less-css-mode workgroups2 ace-jump-mode
-             yaml-mode whitespace-cleanup-mode popup ag
+  '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell
+             yaml-mode whitespace-cleanup-mode popup ag ispell
              groovy-mode smartparens syntax-subword rainbow-mode
              python-mode scss-mode nlinum projectile auto-complete
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
@@ -554,7 +554,8 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;;org modes
-(autoload 'org-mode "org-mode")
+;;(autoload 'org-mode "org-mode")
+(require 'org)
 ;;(require 'org)
 ;; (define-key global-map "\C-cl" 'org-store-link)
 ;; (define-key global-map "\C-ca" 'org-agenda)
@@ -562,6 +563,19 @@ position between last non-whitespace and `end-of-line'."
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (setq org-agenda-files (list (concat org-mode-dir "work.org")
                              (concat org-mode-dir "life.org")))
+
+
+;; flyspell
+;;(autoload 'flyspell-mode "flyspell-mode")
+(require 'flyspell)
+(setq flyspell-issue-message-flag nil)
+(setq-default ispell-program-name "aspell")
+(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
+(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
+
+
 
 
 ;; columns
