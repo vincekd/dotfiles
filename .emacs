@@ -30,11 +30,10 @@
 ;; get melpa packages in package.el
 ;;
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-             ;;("marmalade" . "http://marmalade-repo.org/packages/")
-             ("melpa" . "http://melpa.milkbox.net/packages/")))
-;; (add-to-list 'package-archives
-;;   '("melpa" . "http: //melpa.milkbox.net/packages/") t)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ;;("gnu" . "http://elpa.gnu.org/packages/")
+                         ;;("marmalade" . "http://marmalade-repo.org/packages/")
+                         ))
 (package-initialize)
 
 (require 'cl)
@@ -48,11 +47,11 @@
   ;;   highlight-indent-guides
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell
              yaml-mode whitespace-cleanup-mode popup ag ispell
-             groovy-mode smartparens syntax-subword rainbow-mode
+             groovy-mode groovy-imports smartparens syntax-subword
              python-mode scss-mode nlinum projectile auto-complete
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
-             gradle-mode ace-window auto-package-update flycheck
-             web-mode magit expand-region shackle golden-ratio
+             gradle-mode ace-window auto-package-update rainbow-mode
+             flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
@@ -143,6 +142,10 @@
 ;; use y or n instead of yes or not
 (fset 'yes-or-no-p 'y-or-n-p)
 
+
+(if (window-system)
+    (set-frame-size (selected-frame) 124 40))
+
 ;; color theme
 ;;(load-theme 'zenburn t)
 ;;(setq custom-safe-themes t)
@@ -152,6 +155,10 @@
 ;;       '((:eval (if (buffer-file-name)
 ;;                    (abbreviate-file-name (buffer-file-name))
 ;;                  "%b"))))
+
+;; to test if in prog mode
+;; (add-hook 'prog-mode-hook '(lambda ()
+;;                              (message "in prog mode")))
 
 ;;no wrap lines
 (set-default 'truncate-lines t)
@@ -177,6 +184,8 @@
 
 ;; highlight current line
 (global-hl-line-mode +1)
+
+(global-auto-revert-mode t)
 
 ;;
 ;; Functions
@@ -409,11 +418,11 @@ position between last non-whitespace and `end-of-line'."
 (setq flycheck-idle-change-delay 2)
 (flycheck-add-mode 'javascript-eslint 'js2-mode)
 (flycheck-add-mode 'javascript-eslint 'js-mode)
-;;(flycheck-add-mode 'groovy 'groovy-mode)
+(flycheck-add-mode 'groovy 'groovy-mode)
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
-;;(add-hook 'groovy-mode-hook 'flycheck-mode)
+(add-hook 'groovy-mode-hook 'flycheck-mode)
 
 
 (autoload 'js2-mode "js2-mode")
@@ -450,6 +459,7 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'groovy-mode "groovy-mode")
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
+(add-hook 'groovy-mode-hook 'groovy-imports-scan-file)
 
 
 (require 'syntax-subword)
@@ -457,7 +467,8 @@ position between last non-whitespace and `end-of-line'."
 (global-syntax-subword-mode 1)
 
 
-(global-auto-complete-mode 1)
+;;(global-auto-complete-mode 1)
+(add-hook 'prog-mode-hook 'auto-complete-mode)
 
 
 ;; projectile stuff
@@ -570,10 +581,10 @@ position between last non-whitespace and `end-of-line'."
 (require 'flyspell)
 (setq flyspell-issue-message-flag nil)
 (setq-default ispell-program-name "aspell")
-(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
-(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
+;;(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
+;;(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
 (add-hook 'org-mode-hook 'flyspell-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
+;;(add-hook 'text-mode-hook 'flyspell-mode)
 
 
 

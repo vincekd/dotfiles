@@ -15,7 +15,7 @@ export HISTIGNORE="&:??:[ ]*:clear:exit:logout:hist *"
 export HISTSIZE=99999
 export SAVEHIST=5000
 export HISTFILE=~/.bash_history
-export EDITOR='env TERM=xterm-256color em'
+export EDITOR='env TERM=emacs'
 export DISPLAY=:0.0
 export PROMPT_COMMAND='history -a'
 
@@ -57,6 +57,7 @@ alias q="exit"
 alias lss="ll | grep -i"
 alias cdl="cd -"
 alias gs="git status"
+alias gittop="git rev-parse --show-toplevel"
 
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
@@ -177,4 +178,18 @@ gg () {
         esac
     fi
 }
+
+# ff () {
+#     if [ -z "$1" ] || [ -z "$2" ]; then
+#         echo "Oops: need search term and file type arguments 'ff something groovy'"
+#     else
+#         #exec `ag -lQ '$1' -G '\.$2\$'`
+#         echo "ag -lQ '$1' -G '\.$2\$'"
+#         ag -lQ '$1' -G '\.$2\$'
+#         # out=$(ag -lQ '$1' -G '\.$2\$')
+#         # if [ ! -z "$out" ]; then
+#         #     echo  "$out"
+#         # fi
+#     fi
+# } >&1 2>&2
 

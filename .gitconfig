@@ -1,0 +1,8 @@
+[push]
+	default = matching
+[core]
+	autocrlf = false
+	whitespace = lf-at-eol
+	eol = lf
+[credential]
+	helper = wincred
