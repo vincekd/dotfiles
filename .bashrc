@@ -5,9 +5,18 @@ if [ -z "$PS1" ]; then
     return
 fi
 
+# shopts
+shopt -s histverify
+shopt -s checkwinsize
+shopt -s cdspell
+shopt -s cmdhist
+shopt -s dotglob
+shopt -s histappend
+shopt -s nocaseglob
+
 
 #
-# various options
+# shell variables
 #
 export INPUTRC=$HOME/.inputrc
 export HISTCONTROL=ignoredups
@@ -18,15 +27,8 @@ export HISTFILE=~/.bash_history
 export EDITOR='env TERM=emacs'
 export DISPLAY=:0.0
 export PROMPT_COMMAND='history -a'
-
-
-shopt -s histverify
-shopt -s checkwinsize
-shopt -s cdspell
-shopt -s cmdhist
-shopt -s dotglob
-shopt -s histappend
-shopt -s nocaseglob
+export GTAGSCONF=~/.globalrc
+export GTAGSLABEL=pygments
 
 
 #
@@ -60,18 +62,13 @@ alias cdl="cd -"
 alias gs="git status"
 alias gittop="git rev-parse --show-toplevel"
 
-
-
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
 else
     alias emo="emacs"
-    export GTAGSCONF=/usr/local/share/gtags/gtags.conf
-    export GTAGSLABEL=pygments
 fi
 
-# set in keybindings in ~/.inputrc
-
+# keybindings set in ~/.inputrc
 
 #
 # customize look
