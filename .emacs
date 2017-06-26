@@ -5,19 +5,25 @@
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message t)
 
-;;(defvar em-home "~/AppData/Roaming/.emacs.d")
-(defvar em-dir "~/.emacs.d/")
 (defvar is-windows (string-equal system-type "windows-nt"))
+
+;; (when is-windows
+;;   ;; make this explicit
+;;   (setenv "HOME" "C:/Users/Vincent/"))
+
+;;(defvar em-home "~/AppData/Roaming/.emacs.d")
+(defvar em-dir (expand-file-name "~/.emacs.d/"))
 (defvar my-font "Consolas")
 
-(defvar org-mode-dir "~/notes/")
+
+(defvar org-mode-dir (expand-file-name "~/notes/"))
 
 (setq user-emacs-directory em-dir)
-(setq default-directory "~/")
+(setq default-directory (expand-file-name "~/"))
 
 (add-to-list 'load-path (concat em-dir "lisp/"))
 
-(setq exec-path (append exec-path '("~/node_modules/eslint")))
+(setq exec-path (append exec-path '((expand-file-name "~/node_modules/eslint"))))
 
 (setq shell-file-name "bash")
 (setenv "SHELL" shell-file-name)
@@ -45,7 +51,7 @@
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
   ;;   highlight-indent-guides
-  '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell
+  '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
              yaml-mode whitespace-cleanup-mode popup ag ispell
              groovy-mode groovy-imports smartparens syntax-subword
              python-mode scss-mode nlinum projectile auto-complete
@@ -90,6 +96,7 @@
 (require 'auto-package-update)
 (auto-package-update-maybe)
 (setq auto-package-update-interval 14)
+
 
 ;;
 ;; general emacs
@@ -155,10 +162,6 @@
 ;;       '((:eval (if (buffer-file-name)
 ;;                    (abbreviate-file-name (buffer-file-name))
 ;;                  "%b"))))
-
-;; to test if in prog mode
-;; (add-hook 'prog-mode-hook '(lambda ()
-;;                              (message "in prog mode")))
 
 ;;no wrap lines
 (set-default 'truncate-lines t)
@@ -339,29 +342,29 @@ position between last non-whitespace and `end-of-line'."
 ;;(smart-mode-line-enable)
 
 
-(require 'shackle)
-;;(setq shackle-default-rule '(:select t))
-(setq shackle-rules
-      '((compilation-mode :noselect t)
-        ("*Ido Completions*" :noselect t :other t)
-        ("*eshell*" :select t :same t)
-        ("*Shell Command Output*" :noselect t)
-        ("*shell*" :select t :same t)
-        ("*Messages*" :noselect t :inhibit-window-quit t :other t)
-        ("*Metahelp*" :select t :same t)
-        ("*Help*" :select t :same t)
-        ("*Completions*" :noselect t :other t)
-        ("*Warnings*" :noselect t :other t)
-        ("*Compile-Log*" :noselect t :other t)
-        (magit-status-mode :select t :inhibit-window-quit t :same t)
-        (magit-log-mode :select t :inhibit-window-quit t :same t)
-        ;;projectile search
-        ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
-(shackle-mode 1)
+;; (require 'shackle)
+;; ;;(setq shackle-default-rule '(:select t))
+;; (setq shackle-rules
+;;       '((compilation-mode :noselect t)
+;;         ("*Ido Completions*" :noselect t :other t)
+;;         ("*eshell*" :select t :same t)
+;;         ("*Shell Command Output*" :noselect t)
+;;         ("*shell*" :select t :same t)
+;;         ("*Messages*" :noselect t :inhibit-window-quit t :other t)
+;;         ("*Metahelp*" :select t :same t)
+;;         ("*Help*" :select t :same t)
+;;         ("*Completions*" :noselect t :other t)
+;;         ("*Warnings*" :noselect t :other t)
+;;         ("*Compile-Log*" :noselect t :other t)
+;;         (magit-status-mode :select t :inhibit-window-quit t :same t)
+;;         (magit-log-mode :select t :inhibit-window-quit t :same t)
+;;         ;;projectile search
+;;         ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
+;; (shackle-mode 1)
 
 
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+;; (require 'expand-region)
+;; (global-set-key (kbd "C-=") 'er/expand-region)
 
 
 (require 'golden-ratio)
@@ -377,26 +380,28 @@ position between last non-whitespace and `end-of-line'."
 
 ;; whitespace mode y'all
 ;; whitespace mode conflicts with highlight-indent-guides-mode
-(require 'whitespace)
-;; disable highlighting lines over certain limit
-(setq whitespace-line-column -1)
-;; (setq whitespace-line-column 100)
-;;space-mark newline-mark
-(setq whitespace-style (quote (face lines-tail trailing tabs newline tab-mark)))
-;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
-;; (setq inhibit-compacting-font-caches t)
-;; (setq whitespace-display-mappings
-;;       ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-;;       '(
-;;         (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-;;         (newline-mark 10 [182 10]) ; LINE FEED,
-;;         (tab-mark 9 [9655 9] [92 9]) ; tab
-;;         ))
+(autoload 'whitespace-mode "whitespace-mode")
+(with-eval-after-load "whitespace"
+  ;; disable highlighting lines over certain limit
+  (setq whitespace-line-column -1)
+  ;;space-mark newline-mark
+  (setq whitespace-style (quote (face lines-tail trailing tabs tab-mark)))
+  ;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
+  (setq inhibit-compacting-font-caches t)
+  (setq whitespace-display-mappings
+        ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+        '(
+          (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+          (newline-mark 10 [182 10]) ; LINE FEED,
+          (tab-mark 9 [9655 9] [92 9]) ; tab
+          )))
 ;;(global-whitespace-mode t)
+;;(add-hook 'prog-mode-hook 'whitespace-mode)
 
 
 ;;(global-whitespace-cleanup-mode 1)
-(require 'whitespace-cleanup-mode)
+;;(require 'whitespace-cleanup-mode)
+(autoload 'whitespace-cleanup-mode "whitespace-cleanup-mode")
 (add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
 
@@ -413,12 +418,13 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; syntax checker
-(require 'flycheck)
-(setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
-(setq flycheck-idle-change-delay 2)
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
-(flycheck-add-mode 'javascript-eslint 'js-mode)
-(flycheck-add-mode 'groovy 'groovy-mode)
+(autoload 'flycheck-mode "flycheck-mode")
+(with-eval-after-load "flycheck"
+  (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
+  (setq flycheck-idle-change-delay 2)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (flycheck-add-mode 'javascript-eslint 'js-mode)
+  (flycheck-add-mode 'groovy 'groovy-mode))
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
@@ -426,29 +432,23 @@ position between last non-whitespace and `end-of-line'."
 
 
 (autoload 'js2-mode "js2-mode")
-(setq
- ;; js version (2.0)
- js2-language-version 200
- ;; ignore global libraries
- js2-global-externs '("jQuery" "$" "_" "angular")
- ;; include common keywords
- js2-include-browser-externs t
- js2-include-node-externs t
- ;; exclude rhino (mozilla js compiler) keywords
- js2-include-rhino-externs nil
- js2-mode-show-parse-errors nil
- js2-mode-show-strict-warnings nil
- js-switch-indent-offset 4
- )
+(with-eval-after-load "js2-mode"
+  (setq
+   ;; js version (2.0)
+   js2-language-version 200
+   ;; ignore global libraries
+   js2-global-externs '("jQuery" "$" "_" "angular")
+   ;; include common keywords
+   js2-include-browser-externs t
+   js2-include-node-externs t
+   ;; exclude rhino (mozilla js compiler) keywords
+   js2-include-rhino-externs nil
+   js2-mode-show-parse-errors nil
+   js2-mode-show-strict-warnings nil
+   js-switch-indent-offset 4)
+  (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
-;;(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (rename-modeline "js2-mode" js2-mode "JS2")
-
-
-;;(add-hook 'js-mode-hook 'my-enable-rainbow-mode)
-;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
-;;(rename-modeline "js-mode" js-mode "JS")
 
 
 (autoload 'json-mode "json-mode")
@@ -467,55 +467,90 @@ position between last non-whitespace and `end-of-line'."
 (global-syntax-subword-mode 1)
 
 
-;;(global-auto-complete-mode 1)
+(autoload 'auto-complete-mode "auto-complete")
 (add-hook 'prog-mode-hook 'auto-complete-mode)
 
 
 ;; projectile stuff
-(require 'projectile)
-(setq projectile-mode-line
-      '(:eval (format " Proj[%s]" (projectile-project-name))))
-;;(setq projectile-mode-line nil)
-;; set find-file to C-O (done in my-keys-minor-mode)
-;;(setq projectile-completion-system 'grizzl)
-(setq projectile-indexing-method 'alien)
+(load-file (expand-file-name "~/dev/projectile/projectile.el"))
+(with-eval-after-load "projectile"
+  (setq projectile-mode-line
+        '(:eval (format " Proj[%s]" (projectile-project-name))))
+  ;;(setq projectile-mode-line nil)
+  ;; set find-file to C-O (done in my-keys-minor-mode)
+  (setq projectile-completion-system 'ido)
+  ;;(setq projectile-indexing-method 'native)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching t)
+  (setq projectile-require-project-root nil)
+  (setq projectile-verbose nil)
+
+  (setq projectile-globally-ignored-file-suffixes
+        '(".png"
+          ".pdf"
+          ".class"
+          ".gif"
+          ".jpg"
+          ".eot"
+          ".ttf"
+          ".woff"
+          ".woff2"
+          ".xlsx"
+          ".doc"
+          ".docx"
+          ".jar"
+          ".project"
+          ".classpath"
+          ".zip"
+          ".tern-project"))
+  (setq projectile-globally-ignored-files
+        (append '("GRTAGS"
+                  "GPATH"
+                  "GTAGS"
+                  "TAGS")
+                projectile-globally-ignored-files))
+  (setq projectile-globally-ignored-directories
+        (append '("*.gradle"
+                  "*gradle"
+                  "*.settings"
+                  "*build"
+                  "*lib"
+                  "*libs"
+                  "*bower_components")
+                projectile-globally-ignored-directories)))
 (projectile-mode 1)
 
 
 ;; ido search, flx
 (require 'flx-ido)
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
 (ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
 (ido-vertical-mode 1)
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
 
 
 ;; (autoload 'idomenu "idomenu" nil t)
 ;; (global-set-key (kbd "C-x C-g") 'idomenu)
 
 
-;; ;; ace jump mode
+;; ace jump mode
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-(autoload
-  'ace-jump-mode-pop-mark
-  "ace-jump-mode"
-  "Ace jump back:-)"
-  t)
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 (define-key global-map (kbd "M-p") 'ace-window)
+(autoload 'ace-jump-mode "ace-jump-mode")
+(autoload 'ace-jump-mode-pop-mark "ace-jump-mode")
+(autoload 'ace-window "ace-window")
+(with-eval-after-load "ace-jump-mode"
+  (ace-jump-mode-enable-mark-sync))
 
 
 ;; - layout stuff
-(require 'smartparens-config)
-;;(smartparens-global-mode 1)
+(autoload 'smartparens-mode "smartparens")
+(with-eval-after-load "smartparens"
+  (require 'smartparens-config))
 (add-hook 'prog-mode-hook 'smartparens-mode)
-;; (add-hook 'prog-mode-hook 'electric-format-mode)
-;; (add-hook 'prog-mode-hook 'electric-pair-mode)
-;; (add-hook 'prog-mode-hook 'electric-quote-mode)
 
 
 ;;git commands (doesn't work very well)
@@ -537,27 +572,28 @@ position between last non-whitespace and `end-of-line'."
 ;;       (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 
 
-(require 'workgroups2)
-(setq wg-session-file (concat em-dir ".emacs-workgroups"))
-;;(setq wg-session-load-on-start t)
-;;(setq wg-mode-line-display-on nil)
-(setq wg-emacs-exit-save-behavior 'ask) ; Options: 'save 'ask nil
-(setq wg-workgroups-mode-exit-save-behavior 'ask) ; Options: 'save 'ask nil
-;;(setq wg-morph-on nil)
-(setq wg-mode-line-decor-left-brace "["
-      wg-mode-line-decor-right-brace "]"
-      wg-mode-line-decor-divider ":")
+(autoload 'workgroups-mode "workgroups2")
+(with-eval-after-load "workgroups2"
+  (setq wg-session-file (concat em-dir ".emacs-workgroups"))
+  ;;(setq wg-session-load-on-start t)
+  ;;(setq wg-mode-line-display-on nil)
+  (setq wg-emacs-exit-save-behavior 'ask) ; Options: 'save 'ask nil
+  (setq wg-workgroups-mode-exit-save-behavior 'ask) ; Options: 'save 'ask nil
+  ;;(setq wg-morph-on nil)
+  (setq wg-mode-line-decor-left-brace "["
+        wg-mode-line-decor-right-brace "]"
+        wg-mode-line-decor-divider ":"))
 (define-key global-map (kbd "C-c z") 'workgroups-mode)
-
 
 ;;(require 'web-mode)
 (autoload 'web-mode "web-mode")
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-(setq web-mode-markup-indent-offset 2)
-(setq web-mode-enable-auto-expanding t)
-(setq web-mode-enable-current-element-highlight t)
-(setq web-mode-auto-close-style 2)
+(with-eval-after-load "web-mode"
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-enable-auto-expanding t)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-auto-close-style 2))
 
 
 ;; make unique names of tabs and shit
@@ -565,28 +601,25 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;;org modes
-;;(autoload 'org-mode "org-mode")
-(require 'org)
-;;(require 'org)
-;; (define-key global-map "\C-cl" 'org-store-link)
-;; (define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
+(autoload 'org-mode "org")
+(with-eval-after-load "org"
+  ;; (define-key global-map "\C-cl" 'org-store-link)
+  ;; (define-key global-map "\C-ca" 'org-agenda)
+  (setq org-log-done t)
+  (setq org-agenda-files (list (concat org-mode-dir "work.org")
+                               (concat org-mode-dir "life.org"))))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(setq org-agenda-files (list (concat org-mode-dir "work.org")
-                             (concat org-mode-dir "life.org")))
 
 
 ;; flyspell
-;;(autoload 'flyspell-mode "flyspell-mode")
-(require 'flyspell)
-(setq flyspell-issue-message-flag nil)
-(setq-default ispell-program-name "aspell")
-;;(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
-;;(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
+(autoload 'flyspell-mode "flyspell")
+(with-eval-after-load "flyspell"
+  (setq flyspell-issue-message-flag nil)
+  (setq-default ispell-program-name "aspell"))
 (add-hook 'org-mode-hook 'flyspell-mode)
 ;;(add-hook 'text-mode-hook 'flyspell-mode)
-
-
+;;(autoload 'flyspell-delay-command "flyspell" "Delay on command." t)
+;;(autoload 'tex-mode-flyspell-verify "flyspell" "" t)
 
 
 ;; columns
@@ -601,10 +634,9 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; show line numbers
-(require 'nlinum)
-;;(global-linum-mode 1)
-;;(global-nlinum-mode 1)
-(add-hook 'prog-mode-hook 'nlinum-mode)
+;;(require 'nlinum)
+(autoload 'nlinum-mode "nlinum")
+;;(add-hook 'prog-mode-hook 'nlinum-mode)
 
 
 ;; hide/show (keybind in my-keys)
@@ -615,7 +647,7 @@ position between last non-whitespace and `end-of-line'."
 (require 'recentf)
 (setq recentf-max-saved-items 200
       recentf-max-menu-items 20)
-(recentf-mode +1)
+(recentf-mode 1)
 
 
 ;; ;; colorize compilation output
@@ -628,18 +660,39 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; DIRED setup
-(require 'dired-x)
-(require 'dired-quick-sort)
-(setq ls-lisp-use-insert-directory-program t)
+;;(autoload 'dired "dired")
+(with-eval-after-load "dired"
+  (require 'dired-x)
+  (require 'dired-quick-sort)
+  (setq ls-lisp-use-insert-directory-program t)
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$"))
+  (setq dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
+  (dired-quick-sort-setup)
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (dired-hide-details-mode)
+              (dired-sort-toggle-or-edit)
+              (dired-omit-mode))))
+
 ;;(defvar ls-opts (shell-command-to-string ". ~/.bashrc; echo -n $LS_OPTS"))
 ;; from .bashrc (probably a better way to get this) (above)
-(setq dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$"))
-(setq dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
-(dired-quick-sort-setup)
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (dired-hide-details-mode)
-            (dired-sort-toggle-or-edit)
-            (dired-omit-mode)))
 
-;; TODO: shorten paths
+
+;; GGTAGS
+;;(load-file "~/dev/ggtags/ggtags.el")
+(autoload 'ggtags-mode "ggtags")
+(with-eval-after-load "ggtags"
+  (setenv "GTAGSCONF" (expand-file-name "~/.globalrc"))
+  (setenv "GTAGSLABEL" "pygments")
+  (setq ggtags-process-environment '("~/.globalrc"))
+  (setq ggtags-use-project-gtagsconf t)
+  ;; custom keys for ggtags
+  (define-key ggtags-mode-map (kbd "M-g d") 'ggtags-find-definition)
+  (define-key ggtags-mode-map (kbd "M-g r") 'ggtags-find-reference)
+  (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+  (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+  (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+  (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+  (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+  (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags))
+(add-hook 'prog-mode-hook 'ggtags-mode)

@@ -19,6 +19,7 @@ export EDITOR='env TERM=emacs'
 export DISPLAY=:0.0
 export PROMPT_COMMAND='history -a'
 
+
 shopt -s histverify
 shopt -s checkwinsize
 shopt -s cdspell
@@ -59,10 +60,14 @@ alias cdl="cd -"
 alias gs="git status"
 alias gittop="git rev-parse --show-toplevel"
 
+
+
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
 else
     alias emo="emacs"
+    export GTAGSCONF=/usr/local/share/gtags/gtags.conf
+    export GTAGSLABEL=pygments
 fi
 
 # set in keybindings in ~/.inputrc
