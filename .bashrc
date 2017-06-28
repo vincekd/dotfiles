@@ -14,6 +14,14 @@ shopt -s dotglob
 shopt -s histappend
 shopt -s nocaseglob
 
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
 
 #
 # shell variables
@@ -24,11 +32,21 @@ export HISTIGNORE="&:??:[ ]*:clear:exit:logout:hist *"
 export HISTSIZE=99999
 export SAVEHIST=5000
 export HISTFILE=~/.bash_history
-export EDITOR='env TERM=emacs'
+if [[ "$OSTYPE" == "gnu-linux" ]]; then
+    export EDITOR="emacsclient -t"
+    export VISUAL="emacsclient -c"
+else
+    export EDITOR="emacs -nw"
+    export VISUAL="emacs"
+fi
 export DISPLAY=:0.0
-export PROMPT_COMMAND='history -a'
+export PROMPT_COMMAND="history -a"
 export GTAGSCONF=~/.globalrc
 export GTAGSLABEL=pygments
+
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
 
 
 #
@@ -51,11 +69,16 @@ export PATH
 export LS_OPTS="--ignore='\.\.' --ignore='\.' --color=auto --group-directories-first --sort=time"
 alias l="ls -Fa ${LS_OPTS}"
 alias ll="l -lho --time-style='+%Y-%m-%d %H:%M'" # --time=ctime"
-alias em="emacs -nw"
+#alias em="emacs -nw"
+alias em="emacsclient -t --alternate-editor='emacs -nw'"
+#alias emax="emacsclient"
 #alias hist="history | grep -E -v '^ *[0-9]+ *hist +' | grep -i"
 alias hist="history | grep -i"
 alias mktar="tar -cvf"
 alias grep="grep --color=auto"
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias pss="ps aux | grep -v grep | grep -i"
 alias q="exit"
 alias lss="ll | grep -i"
 alias cdl="cd -"
@@ -65,7 +88,14 @@ alias gittop="git rev-parse --show-toplevel"
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
 else
-    alias emo="emacs"
+    #alias emo="emacs $1 2>/dev/null >/dev/null &"
+    emo () {
+        emacsclient -c --alternate-editor="emacs" $1 1>/dev/null 2>&1 &
+    }
+fi
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
 fi
 
 # keybindings set in ~/.inputrc

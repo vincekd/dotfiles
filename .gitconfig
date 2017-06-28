@@ -5,4 +5,4 @@
 	whitespace = lf-at-eol
 	eol = lf
 [credential]
-	helper = wincred
+	helper = store

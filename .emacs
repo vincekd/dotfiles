@@ -13,7 +13,7 @@
 
 ;;(defvar em-home "~/AppData/Roaming/.emacs.d")
 (defvar em-dir (expand-file-name "~/.emacs.d/"))
-(defvar my-font "Consolas")
+;;(defvar my-font "Consolas")
 
 
 (defvar org-mode-dir (expand-file-name "~/notes/"))
@@ -30,7 +30,7 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
-(set-face-attribute 'default nil :family my-font)
+;;(set-face-attribute 'default nil :family my-font)
 
 ;;
 ;; get melpa packages in package.el
@@ -54,9 +54,9 @@
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
              yaml-mode whitespace-cleanup-mode popup ag ispell
              groovy-mode groovy-imports smartparens syntax-subword
-             python-mode scss-mode nlinum projectile auto-complete
+             python-mode scss-mode  projectile auto-complete ;;nlinum
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
-             gradle-mode ace-window auto-package-update rainbow-mode
+             gradle-mode ace-window auto-package-update ;;rainbow-mode
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
              ;;themes
@@ -112,6 +112,7 @@
       mouse-yank-at-point t
       require-final-newline t
       visible-bell t
+      ring-bell-function 'ignore
       load-prefer-newer t
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
@@ -142,8 +143,10 @@
 ;;disable right clicks and such
 (dolist (k '([mouse-2] [down-mouse-2] [drag-mouse-2] [double-mouse-2] [triple-mouse-2]
              [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
-             [mouse-4] [down-mouse-4] [drag-mouse-4] [double-mouse-4] [triple-mouse-4]
-             [mouse-5] [down-mouse-5] [drag-mouse-5] [double-mouse-5] [triple-mouse-5]))
+             [down-mouse-4] [drag-mouse-4]
+             [down-mouse-5] [drag-mouse-5]))
+             ;; [mouse-4] [double-mouse-4] [triple-mouse-4]
+             ;; [mouse-5] [double-mouse-5] [triple-mouse-5]))
   (global-unset-key k))
 
 ;; use y or n instead of yes or not
@@ -405,16 +408,16 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
 
-(defun my-enable-rainbow-mode ()
-  "turn on rainbox mode"
-  (rainbow-mode 1))
+;; (defun my-enable-rainbow-mode ()
+;;   "turn on rainbox mode"
+;;   (rainbow-mode 1))
 
 ;; web editing
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
 (setq scss-compile-at-save nil)
-(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
-(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
+;;(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
+;;(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
 
 
 ;; syntax checker
@@ -446,7 +449,8 @@ position between last non-whitespace and `end-of-line'."
    js2-mode-show-parse-errors nil
    js2-mode-show-strict-warnings nil
    js-switch-indent-offset 4)
-  (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
+  ;;(add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
+  )
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (rename-modeline "js2-mode" js2-mode "JS2")
 
