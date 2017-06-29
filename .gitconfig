@@ -6,3 +6,6 @@
 	eol = lf
 [credential]
 	helper = store
+[user]
+	email = vincekd@gmail.com
+	name = vincekd

@@ -88,10 +88,13 @@ alias gittop="git rev-parse --show-toplevel"
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
 else
-    #alias emo="emacs $1 2>/dev/null >/dev/null &"
     emo () {
-        emacsclient -c --alternate-editor="emacs" $1 1>/dev/null 2>&1 &
-    }
+        if [ ! -z "$1" ]; then
+            emacsclient -c --alternate-editor="emacs" $1 1>/dev/null &
+        else
+            emacsclient -c --alternate-editor="emacs" 1>/dev/null &
+        fi
+    } >/dev/null 2>&1
 fi
 
 if [ -f ~/.bash_aliases ]; then
@@ -206,6 +209,7 @@ gg () {
             wp) cd ~/dev/workpro/ ;;
             dl) cd ~/Downloads/ ;;
             ad) cd ~/AppData/Roaming/ ;;
+            hdd) cd /media/vincekd/HDD/ ;;
             *) echo "'$1' is not registered" ;;
         esac
     fi

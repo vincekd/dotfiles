@@ -37,7 +37,7 @@
 ;;
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ;;("gnu" . "http://elpa.gnu.org/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
                          ))
 (package-initialize)
@@ -54,9 +54,9 @@
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
              yaml-mode whitespace-cleanup-mode popup ag ispell
              groovy-mode groovy-imports smartparens syntax-subword
-             python-mode scss-mode  projectile auto-complete ;;nlinum
+             python-mode scss-mode  projectile auto-complete nlinum
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
-             gradle-mode ace-window auto-package-update ;;rainbow-mode
+             gradle-mode ace-window auto-package-update rainbow-mode
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
              ;;themes
@@ -408,16 +408,16 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
 
-;; (defun my-enable-rainbow-mode ()
-;;   "turn on rainbox mode"
-;;   (rainbow-mode 1))
+(defun my-enable-rainbow-mode ()
+  "turn on rainbox mode"
+  (rainbow-mode 1))
 
 ;; web editing
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
 (setq scss-compile-at-save nil)
-;;(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
-;;(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
+(add-hook 'css-mode-hook 'my-enable-rainbow-mode)
+(add-hook 'scss-mode-hook 'my-enable-rainbow-mode)
 
 
 ;; syntax checker
@@ -449,8 +449,7 @@ position between last non-whitespace and `end-of-line'."
    js2-mode-show-parse-errors nil
    js2-mode-show-strict-warnings nil
    js-switch-indent-offset 4)
-  ;;(add-hook 'js2-mode-hook 'my-enable-rainbow-mode)
-  )
+  (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (rename-modeline "js2-mode" js2-mode "JS2")
 
@@ -460,9 +459,11 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; groovy mode
-(autoload 'groovy-mode "groovy-mode")
+(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
+;;(autoload 'groovy-mode "groovy-mode")
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
+;;(with-eval-after-load "groovy-mode")
 (add-hook 'groovy-mode-hook 'groovy-imports-scan-file)
 
 
