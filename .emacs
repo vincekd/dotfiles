@@ -52,7 +52,7 @@
   ;;   company company-shell company-web company-flx company-dict
   ;;   highlight-indent-guides
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
-             yaml-mode whitespace-cleanup-mode popup ag ispell
+             yaml-mode whitespace-cleanup-mode popup ag ispell dash
              groovy-mode groovy-imports smartparens syntax-subword
              python-mode scss-mode  projectile auto-complete nlinum
              flx-ido idomenu ido-vertical-mode json-mode yaml-mode
@@ -264,10 +264,10 @@ position between last non-whitespace and `end-of-line'."
 
 (my-keys-minor-mode 1)
 
-(defmacro rename-modeline (package-name mode new-name)
-  `(eval-after-load ,package-name
-     '(defadvice ,mode (after rename-modeline activate)
-        (setq mode-name ,new-name))))
+;; (defmacro rename-modeline (package-name mode new-name)
+;;   `(eval-after-load ,package-name
+;;      '(defadvice ,mode (after rename-modeline activate)
+;;         (setq mode-name ,new-name))))
 
 ;;
 ;; Personal style
@@ -451,7 +451,7 @@ position between last non-whitespace and `end-of-line'."
    js-switch-indent-offset 4)
   (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(rename-modeline "js2-mode" js2-mode "JS2")
+;;(rename-modeline "js2-mode" js2-mode "JS2")
 
 
 (autoload 'json-mode "json-mode")
@@ -476,8 +476,30 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'prog-mode-hook 'auto-complete-mode)
 
 
+;; ignored files for ag-search and projectile
+(defvar ignored-dirs
+  '("*.gradle/"
+    "*gradle/"
+    "*.settings/"
+    "*build/"
+    "*lib/"
+    "*libs/"
+    "*bower_components/"
+    "*tinymce/"
+    "*bootstrap/"
+    "*.git/"))
+
+(require 'ag)
+(with-eval-after-load "ag"
+  (setq ag-resuse-window nil
+        ;;ag-arguments (append '("-l") ag-arguments)
+        ;;ag-ignore-list ignored-dirs
+        ag-reuse-buffers t))
+
+
 ;; projectile stuff
 (load-file (expand-file-name "~/dev/projectile/projectile.el"))
+;;(require 'projectile)
 (with-eval-after-load "projectile"
   (setq projectile-mode-line
         '(:eval (format " Proj[%s]" (projectile-project-name))))
@@ -512,17 +534,12 @@ position between last non-whitespace and `end-of-line'."
         (append '("GRTAGS"
                   "GPATH"
                   "GTAGS"
-                  "TAGS")
+                  "TAGS"
+                  "*.min.js")
                 projectile-globally-ignored-files))
   (setq projectile-globally-ignored-directories
-        (append '("*.gradle"
-                  "*gradle"
-                  "*.settings"
-                  "*build"
-                  "*lib"
-                  "*libs"
-                  "*bower_components")
-                projectile-globally-ignored-directories)))
+        (append ignored-dirs
+         projectile-globally-ignored-directories)))
 (projectile-mode 1)
 
 
