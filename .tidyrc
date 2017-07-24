@@ -1,0 +1,7 @@
+indent: auto
+indent-spaces: 4
+indent-with-tabs: no
+uppercase-tags: no
+uppercase-attributes: no
+char-encoding: utf8
+#gnu-emacs: true

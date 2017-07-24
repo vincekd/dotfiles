@@ -12,11 +12,7 @@
     "globals": {},
     "rules": {
         "no-console": 0,
-        "indent": [
-            "warn",
-            4,
-            {"ArrayExpression": "first"}
-        ],
+        "indent": 0,
         "linebreak-style": [
             "warn",
             "unix"

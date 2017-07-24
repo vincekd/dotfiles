@@ -427,11 +427,13 @@ position between last non-whitespace and `end-of-line'."
   (setq flycheck-idle-change-delay 2)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (flycheck-add-mode 'javascript-eslint 'js-mode)
-  (flycheck-add-mode 'groovy 'groovy-mode))
+  (flycheck-add-mode 'groovy 'groovy-mode)
+  (flycheck-add-mode 'html-tidy 'web-mode))
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
 (add-hook 'groovy-mode-hook 'flycheck-mode)
+(add-hook 'web-mode 'flycheck-mode)
 
 
 (autoload 'js2-mode "js2-mode")
@@ -459,8 +461,8 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; groovy mode
-(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
-;;(autoload 'groovy-mode "groovy-mode")
+;;(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
+(autoload 'groovy-mode "groovy-mode")
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
 ;;(with-eval-after-load "groovy-mode")
@@ -498,7 +500,7 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; projectile stuff
-(load-file (expand-file-name "~/dev/projectile/projectile.el"))
+(load-file (expand-file-name "~/dev/projectile2/projectile.el"))
 ;;(require 'projectile)
 (with-eval-after-load "projectile"
   (setq projectile-mode-line
@@ -607,15 +609,15 @@ position between last non-whitespace and `end-of-line'."
         wg-mode-line-decor-divider ":"))
 (define-key global-map (kbd "C-c z") 'workgroups-mode)
 
-;;(require 'web-mode)
+
 (autoload 'web-mode "web-mode")
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (with-eval-after-load "web-mode"
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-enable-auto-expanding t)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-auto-close-style 2))
+  (setq web-mode-markup-indent-offset 4
+        web-mode-enable-auto-expanding t
+        web-mode-enable-current-element-highlight t
+        web-mode-auto-close-style 2))
 
 
 ;; make unique names of tabs and shit
