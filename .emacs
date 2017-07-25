@@ -688,9 +688,9 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "dired"
   (require 'dired-x)
   (require 'dired-quick-sort)
-  (setq ls-lisp-use-insert-directory-program t)
-  (setq dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$"))
-  (setq dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
+  (setq ls-lisp-use-insert-directory-program t
+        ;;dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$")
+        dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
   (dired-quick-sort-setup)
   (add-hook 'dired-mode-hook
             (lambda ()

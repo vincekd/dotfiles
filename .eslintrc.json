@@ -21,6 +21,9 @@
             "error",
             "always"
         ],
-        "no-extra-boolean-cast": 0
+        "no-extra-boolean-cast": 0,
+        "no-unused-vars": [
+            "warn"
+        ]
     }
 }
