@@ -103,6 +103,7 @@
 ;;
 (setq transient-mark-mode t ;; enable visual feedback on selections
       scroll-step 1 ;; scroll line by line
+      confirm-kill-emacs 'y-or-n-p ;; don't kill emacs without prompt
       require-final-newline t
       save-interprogram-paste-before-kill t
       ;; scroll comp output
@@ -500,8 +501,8 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; projectile stuff
-(load-file (expand-file-name "~/dev/projectile2/projectile.el"))
-;;(require 'projectile)
+;;(load-file (expand-file-name "~/dev/projectile/projectile.el"))
+(require 'projectile)
 (with-eval-after-load "projectile"
   (setq projectile-mode-line
         '(:eval (format " Proj[%s]" (projectile-project-name))))
