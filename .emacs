@@ -496,7 +496,7 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "ag"
   (setq ag-resuse-window nil
         ;;ag-arguments (append '("-l") ag-arguments)
-        ag-ignore-list ignored-dirs
+        ag-ignore-list (append ignored-dirs '("*.log"))
         ag-reuse-buffers t))
 
 
