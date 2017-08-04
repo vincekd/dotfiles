@@ -270,41 +270,10 @@ position between last non-whitespace and `end-of-line'."
 ;;      '(defadvice ,mode (after rename-modeline activate)
 ;;         (setq mode-name ,new-name))))
 
+
 ;;
 ;; Personal style
 ;;
-;; (setq c-offsets-alist '(
-;;                         (brace-list-entry . [1])
-;;                         (brace-list-open . [1])
-;;                         (brace-list-close . [0])))
-;; (c-add-style "my-code-style" '(
-;;                                (brace-list-entry . +)))
-;; Create my personal style.
-;; (defconst my-code-style
-;;   '(
-;;     (c-tab-always-indent        . t)
-;;     (c-comment-only-line-offset . 4)
-;;     ;; (c-hanging-braces-alist     . ((substatement-open after)
-;;     ;;                                (brace-list-open)))
-;;     ;; (c-hanging-colons-alist     . ((member-init-intro before)
-;;     ;;                                (inher-intro)
-;;     ;;                                (case-label after)
-;;     ;;                                (label after)
-;;     ;;                                (access-label after)))
-;;     (c-cleanup-list . (scope-operator
-;;                        empty-defun-braces
-;;                        defun-close-semi))
-;;     (c-offsets-alist . ((brace-list-entry . +)
-;;                         ;; (arglist-close . c-lineup-arglist)
-;;                         ;; (substatement-open . 0)
-;;                         ;; (case-label        . 4)
-;;                         ;; (block-open        . 0)
-;;                         ;; (knr-argdecl-intro . -)
-;;                         ))
-;;     (c-echo-syntactic-information-p . t))
-;;   "My C Programming Style")
-
-;; (c-add-style "my-code-style" my-code-style)
 
 ;; disable tabs, use spaces
 (setq-default indent-tabs-mode nil)
@@ -314,21 +283,18 @@ position between last non-whitespace and `end-of-line'."
 (setq web-indent-offset 2)
 (set-default 'tab-always-indent 'complete)
 
-;; Customizations for all modes in CC Mode.
-;; (defun my-c-mode-common-hook ()
-;;   ;; set my personal style for the current buffer
-;;   (c-set-style "my-code-style")
-;;   (message "opening c-mode-common")
-;;   ;; other customizations
-;;   ;; (setq tab-width 4
-
-;;   ;;       ;; this will make sure spaces are used instead of tabs
-;;   ;;       indent-tabs-mode nil)
-;;   ;; we like auto-newline, but not hungry-delete
-;;   ;; (c-toggle-auto-newline 1)
-;;   )
-;; (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-
+;; highlight TODO, FIXME, BUG
+;; TODO: make minor mode
+(defun my-highlight-prog-words ()
+  (let* ((comment-opener `(or "//" "/*"))
+        (prog-specials
+         (rx (eval comment-opener) (0+ whitespace) (group (or "FIXME" "TODO" "BUG") ":"))
+         ;;(rx (syntax comment-start) (0+ whitespace) (group (or "FIXME" "TODO" "BUG") ":"))
+         ;;(rx word-start (group (or "FIXME" "TODO" "BUG") ":"))
+         ))
+    (font-lock-add-keywords nil
+                            `((,prog-specials 1 ',font-lock-warning-face t)))))
+(add-hook 'prog-mode-hook 'my-highlight-prog-words)
 
 
 ;;
