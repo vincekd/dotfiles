@@ -50,7 +50,7 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides
+  ;;   highlight-indent-guides hl-todo
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
              yaml-mode whitespace-cleanup-mode popup ag ispell dash
              groovy-mode groovy-imports smartparens syntax-subword
@@ -59,6 +59,7 @@
              gradle-mode ace-window auto-package-update rainbow-mode
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
+             package-lint
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
   "A list of packages to ensure are installed at launch.")
@@ -103,7 +104,7 @@
 ;;
 (setq transient-mark-mode t ;; enable visual feedback on selections
       scroll-step 1 ;; scroll line by line
-      confirm-kill-emacs 'y-or-n-p ;; don't kill emacs without prompt
+      ;;confirm-kill-emacs 'y-or-n-p ;; don't kill emacs without prompt
       require-final-newline t
       save-interprogram-paste-before-kill t
       ;; scroll comp output
@@ -283,23 +284,19 @@ position between last non-whitespace and `end-of-line'."
 (setq web-indent-offset 2)
 (set-default 'tab-always-indent 'complete)
 
-;; highlight TODO, FIXME, BUG
-;; TODO: make minor mode
-(defun my-highlight-prog-words ()
-  (let* ((comment-opener `(or "//" "/*"))
-        (prog-specials
-         (rx (eval comment-opener) (0+ whitespace) (group (or "FIXME" "TODO" "BUG") ":"))
-         ;;(rx (syntax comment-start) (0+ whitespace) (group (or "FIXME" "TODO" "BUG") ":"))
-         ;;(rx word-start (group (or "FIXME" "TODO" "BUG") ":"))
-         ))
-    (font-lock-add-keywords nil
-                            `((,prog-specials 1 ',font-lock-warning-face t)))))
-(add-hook 'prog-mode-hook 'my-highlight-prog-words)
-
 
 ;;
 ;; MODE CONFIGS
 ;;
+
+(autoload 'comment-tags-mode "comment-tags-mode")
+(with-eval-after-load "comment-tags"
+  (setq comment-tags-comment-start-only t
+        comment-tags-require-colon t
+        comment-tags-case-sensitive t))
+;; TODO: remove once added to melpa
+(load-file "~/dev/comment-tags/comment-tags.el")
+(add-hook 'prog-mode-hook 'comment-tags-mode)
 
 (require 'smart-mode-line)
 (setq sml/shorten-directory t)
