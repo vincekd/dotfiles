@@ -44,6 +44,10 @@ export PROMPT_COMMAND="history -a"
 export GTAGSCONF=~/.globalrc
 export GTAGSLABEL=pygments
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac

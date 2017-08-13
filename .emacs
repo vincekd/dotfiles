@@ -30,7 +30,13 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
-;;(set-face-attribute 'default nil :family my-font)
+(set-face-attribute 'default nil
+                    ;;:family "Consolas"
+                    ;;:family "Noto Serif"
+                    ;;:width 'ultra-expanded
+                    ;;:height 105
+                    :family "Noto Mono"
+                    :height 100)
 
 ;;
 ;; get melpa packages in package.el
@@ -59,9 +65,10 @@
              gradle-mode ace-window auto-package-update rainbow-mode
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
-             package-lint
+             package-lint ert shut-up aggressive-indent
              ;;themes
-             zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme)
+             zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
+             tangotango-theme)
   "A list of packages to ensure are installed at launch.")
 
 ;; conditional package adds
@@ -116,16 +123,18 @@
       visible-bell t
       ring-bell-function 'ignore
       load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain)
+      ediff-window-setup-function 'ediff-setup-windows-plain
 
-(setq buffer-file-coding-system 'utf-8-unix)
-(setq default-file-name-coding-system 'utf-8-unix)
-(setq default-keyboard-coding-system 'utf-8-unix)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(setq default-sendmail-coding-system 'utf-8-unix)
-(setq default-terminal-coding-system 'utf-8-unix)
+      ;; buffer encoding
+      buffer-file-coding-system 'utf-8-unix
+      default-file-name-coding-system 'utf-8-unix
+      default-keyboard-coding-system 'utf-8-unix
+      default-process-coding-system '(utf-8-unix . utf-8-unix)
+      default-sendmail-coding-system 'utf-8-unix
+      default-terminal-coding-system 'utf-8-unix
 
-(setq custom-file (concat em-dir "custom.el"))
+      ;; custom file
+      custom-file (concat em-dir "custom.el"))
 ;; (load custom-file :noerror)
 
 ;; put backup files in single directory
@@ -155,13 +164,15 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 
+;; set gui window size
 (if (window-system)
     (set-frame-size (selected-frame) 124 40))
 
 ;; color theme
+(setq custom-safe-themes t)
 ;;(load-theme 'zenburn t)
-;;(setq custom-safe-themes t)
 (load-theme 'gruvbox t)
+;;(load-theme 'tangotango t)
 
 ;; (setq frame-title-format
 ;;       '((:eval (if (buffer-file-name)
@@ -309,6 +320,14 @@ position between last non-whitespace and `end-of-line'."
 ;;(smart-mode-line-enable)
 
 
+(autoload 'aggressive-indent-mode "aggressive-indent")
+(with-eval-after-load "aggressive-indent"
+  (setq aggressive-indent-excluded-modes (append
+                                          aggressive-indent-excluded-modes
+                                          '())))
+;;(add-hook 'prog-mode-hook 'aggressive-indent-mode)
+
+
 ;; (require 'shackle)
 ;; ;;(setq shackle-default-rule '(:select t))
 ;; (setq shackle-rules
@@ -425,8 +444,8 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; groovy mode
-;;(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
-(autoload 'groovy-mode "groovy-mode")
+(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
+;;(autoload 'groovy-mode "groovy-mode")
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
 ;;(with-eval-after-load "groovy-mode")
@@ -453,13 +472,14 @@ position between last non-whitespace and `end-of-line'."
     "*bower_components/"
     "*tinymce/"
     "*bootstrap/"
-    "*.git/"))
+    "*.git/"
+    "/main-application/uploads/"))
 
 (require 'ag)
 (with-eval-after-load "ag"
   (setq ag-resuse-window nil
         ;;ag-arguments (append '("-l") ag-arguments)
-        ag-ignore-list (append ignored-dirs '("*.log"))
+        ag-ignore-list (append ignored-dirs '("*.log" "*.csv"))
         ag-reuse-buffers t))
 
 
@@ -660,7 +680,8 @@ position between last non-whitespace and `end-of-line'."
             (lambda ()
               (dired-hide-details-mode)
               (dired-sort-toggle-or-edit)
-              (dired-omit-mode))))
+              ;;(dired-omit-mode)
+              )))
 
 ;;(defvar ls-opts (shell-command-to-string ". ~/.bashrc; echo -n $LS_OPTS"))
 ;; from .bashrc (probably a better way to get this) (above)
