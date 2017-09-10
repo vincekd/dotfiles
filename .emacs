@@ -58,14 +58,15 @@
   ;;   company company-shell company-web company-flx company-dict
   ;;   highlight-indent-guides hl-todo
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
-             yaml-mode whitespace-cleanup-mode popup ag ispell dash
+             yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
              groovy-mode groovy-imports smartparens syntax-subword
              python-mode scss-mode  projectile auto-complete nlinum
-             flx-ido idomenu ido-vertical-mode json-mode yaml-mode
+             flx-ido idomenu ido-vertical-mode ido-completing-read+
              gradle-mode ace-window auto-package-update rainbow-mode
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
-             package-lint ert shut-up aggressive-indent
+             package-lint ert shut-up aggressive-indent json-mode dash
+             smex
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
              tangotango-theme)
@@ -233,10 +234,10 @@ position between last non-whitespace and `end-of-line'."
   "Dummy function that does nothing"
   (interactive "^"))
 
-(defun recentf-ido-find-file ()
+(defun recentf-find-file ()
   "Find a recent file using ido."
   (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+  (let ((file (completing-read "Choose recent file: " recentf-list nil t)))
     (when file
       (find-file file))))
 
@@ -262,7 +263,7 @@ position between last non-whitespace and `end-of-line'."
     (define-key map (kbd "C-M-s") 'isearch-forward)
     (define-key map (kbd "C-M-r") 'isearch-backward)
     (define-key map (kbd "C-c C-v") 'hs-toggle-hiding)
-    (define-key map (kbd "C-S-O") 'recentf-ido-find-file)
+    (define-key map (kbd "C-S-O") 'recentf-find-file)
     (define-key map (kbd "C-S-R") 'projectile-find-file)
     (define-key map (kbd "C-S-f") 'projectile-ag)
     (define-key map (kbd "C-c k") 'kill-other-buffers)
@@ -299,9 +300,18 @@ position between last non-whitespace and `end-of-line'."
 ;;
 ;; MODE CONFIGS
 ;;
-
+(setq debug-on-error t)
 (autoload 'comment-tags-mode "comment-tags-mode")
 (with-eval-after-load "comment-tags"
+  (setq comment-tags-keyword-faces
+        `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
+          ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
+          ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
+          ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
+          ("KLUDGE" . ,(list :weight 'bold :foreground "#E8B71A"))
+          ("XXX" . ,(list :weight 'bold :foreground "#F7EAC8"))
+          ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
+          ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
   (setq comment-tags-comment-start-only t
         comment-tags-require-colon t
         comment-tags-case-sensitive t))
@@ -446,9 +456,11 @@ position between last non-whitespace and `end-of-line'."
 ;; groovy mode
 (load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
 ;;(autoload 'groovy-mode "groovy-mode")
+(with-eval-after-load "groovy-mode"
+  (setq
+   groovy-highlight-assignments t))
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
-;;(with-eval-after-load "groovy-mode")
 (add-hook 'groovy-mode-hook 'groovy-imports-scan-file)
 
 
@@ -531,12 +543,24 @@ position between last non-whitespace and `end-of-line'."
 
 ;; ido search, flx
 (require 'flx-ido)
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
+(require 'ido-completing-read+)
+(setq
+ ido-enable-flex-matching t
+ ido-use-faces nil
+ ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 (ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
 (ido-vertical-mode 1)
+(ido-ubiquitous-mode 1)
+
+
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c M-x") 'execute-extended-command)
 
 
 ;; (autoload 'idomenu "idomenu" nil t)
@@ -598,7 +622,7 @@ position between last non-whitespace and `end-of-line'."
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (with-eval-after-load "web-mode"
-  (setq web-mode-markup-indent-offset 4
+  (setq web-mode-markup-indent-offset 2
         web-mode-enable-auto-expanding t
         web-mode-enable-current-element-highlight t
         web-mode-auto-close-style 2))

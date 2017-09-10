@@ -47,6 +47,7 @@ export GTAGSLABEL=pygments
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
+export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -58,6 +59,10 @@ esac
 #
 if [ -d ~/scripts/ ]; then
     PATH=$PATH:~/scripts/
+fi
+
+if [ -d ~/.npm-global ]; then
+    PATH=$PATH:~/.npm-global/bin
 fi
 
 if [ -d ~/bin/ ]; then
@@ -214,6 +219,7 @@ gg () {
             dl) cd ~/Downloads/ ;;
             ad) cd ~/AppData/Roaming/ ;;
             hdd) cd /media/vincekd/HDD/ ;;
+            v) cd /media/vincekd/HDD/Users/Vincent/ ;;
             *) echo "'$1' is not registered" ;;
         esac
     fi
