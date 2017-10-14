@@ -23,7 +23,7 @@
 
 (add-to-list 'load-path (concat em-dir "lisp/"))
 
-(setq exec-path (append exec-path '((expand-file-name "~/node_modules/eslint"))))
+;;(setq exec-path (append exec-path '((expand-file-name "~/node_modules/eslint"))))
 
 (setq shell-file-name "bash")
 (setenv "SHELL" shell-file-name)
@@ -66,7 +66,7 @@
              flycheck web-mode magit expand-region shackle golden-ratio
              golden-ratio-scroll-screen dired-quick-sort smart-mode-line
              package-lint ert shut-up aggressive-indent json-mode dash
-             smex
+             smex pcre2el comment-tags ess typescript-mode
              ;;themes
              zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
              tangotango-theme)
@@ -300,8 +300,9 @@ position between last non-whitespace and `end-of-line'."
 ;;
 ;; MODE CONFIGS
 ;;
-(setq debug-on-error t)
-(autoload 'comment-tags-mode "comment-tags-mode")
+;;(setq debug-on-error t)
+(autoload 'comment-tags-mode "comment-tags")
+(setq comment-tags-keymap-prefix (kbd "C-c t"))
 (with-eval-after-load "comment-tags"
   (setq comment-tags-keyword-faces
         `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
@@ -315,15 +316,19 @@ position between last non-whitespace and `end-of-line'."
   (setq comment-tags-comment-start-only t
         comment-tags-require-colon t
         comment-tags-case-sensitive t))
-;; TODO: remove once added to melpa
-(load-file "~/dev/comment-tags/comment-tags.el")
 (add-hook 'prog-mode-hook 'comment-tags-mode)
+
 
 (require 'smart-mode-line)
 (setq sml/shorten-directory t)
 (setq sml/shorten-modes t)
-;;(add-to-list 'sml/replacer-regexp-list '("^~/dev/" ":DEV:") t)
-(add-to-list 'sml/replacer-regexp-list '("^~/dev/workpro/main-application/" ":WP:") t)
+(add-to-list 'sml/replacer-regexp-list '("^~/dev/" ":DEV:") t)
+(add-to-list 'sml/replacer-regexp-list '("^:DEV:workpro/main-application/" ":WP:") t)
+;; TODO: fix this
+(add-to-list 'sml/replacer-regexp-list '("^:WP:\([*\\]*\)/src/main/" ":WP/\1:") t)
+(add-to-list 'sml/replacer-regexp-list '("^:WP/\(.*\):groovy/org/egg/games/plugins/notebook/" ":WP/\1/GR:") t)
+(add-to-list 'sml/replacer-regexp-list '("^:WP/\(.*\):resources/META-INF/resources/" ":WP:\1:GR:RS") t)
+
 (setq rm-whitelist " *Proj\\[.*")
 ;;(add-to-list 'sml/replacer-regexp-list '("^:Git:\(.*\)/src/main/java/" ":G/\1/SMJ:") t)
 (sml/setup)
@@ -445,8 +450,21 @@ position between last non-whitespace and `end-of-line'."
    js2-mode-show-strict-warnings nil
    js-switch-indent-offset 4)
   (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;;(rename-modeline "js2-mode" js2-mode "JS2")
+;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+
+;; JS mode
+(autoload 'js-mode "js")
+(with-eval-after-load
+    (setq
+     ;;js-language-version 200
+     js-indent-level 4
+     ;;js-expr-indent-offset 8
+     js-indent-first-init 'dynamic
+     ;; only works in emacs 26+
+     js-chain-indent t
+     js-indent-align-list-continuation nil))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 
 
 (autoload 'json-mode "json-mode")
@@ -457,11 +475,19 @@ position between last non-whitespace and `end-of-line'."
 (load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
 ;;(autoload 'groovy-mode "groovy-mode")
 (with-eval-after-load "groovy-mode"
-  (setq
-   groovy-highlight-assignments t))
+  (setq groovy-highlight-assignments t))
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
 (add-hook 'groovy-mode-hook 'groovy-imports-scan-file)
+
+
+;; R mode
+(autoload 'ess-site "ess")
+(add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
+
+
+(autoload 'typescript-mode "typescript-mode")
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
 
 (require 'syntax-subword)
@@ -485,6 +511,8 @@ position between last non-whitespace and `end-of-line'."
     "*tinymce/"
     "*bootstrap/"
     "*.git/"
+    "*media/"
+    "*images/"
     "/main-application/uploads/"))
 
 (require 'ag)
@@ -667,7 +695,7 @@ position between last non-whitespace and `end-of-line'."
 
 ;; show line numbers
 ;;(require 'nlinum)
-(autoload 'nlinum-mode "nlinum")
+;;(autoload 'nlinum-mode "nlinum")
 ;;(add-hook 'prog-mode-hook 'nlinum-mode)
 
 
