@@ -477,7 +477,7 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "groovy-mode"
   (setq groovy-highlight-assignments t))
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
-(add-to-list 'auto-mode-alist '(".gradle\\'" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 (add-hook 'groovy-mode-hook 'groovy-imports-scan-file)
 
 
