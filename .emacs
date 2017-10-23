@@ -472,8 +472,8 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; groovy mode
-(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
-;;(autoload 'groovy-mode "groovy-mode")
+;;(load-file (expand-file-name "~/dev/groovy-emacs-modes/groovy-mode.el"))
+(autoload 'groovy-mode "groovy-mode")
 (with-eval-after-load "groovy-mode"
   (setq groovy-highlight-assignments t))
 (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))

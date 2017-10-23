@@ -1,4 +1,5 @@
-if [ -f "${HOME}/.bashrc" ] ; then
-    source "${HOME}/.bashrc"
-fi
+#
+# ~/.bash_profile
+#
 
+[[ -f ~/.bashrc ]] && . ~/.bashrc
