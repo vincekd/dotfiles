@@ -217,9 +217,7 @@ gg () {
             rw) cd ~/dev/rena-web/ ;;
             wp) cd ~/dev/workpro/ ;;
             dl) cd ~/Downloads/ ;;
-            ad) cd ~/AppData/Roaming/ ;;
-            hdd) cd /media/vincekd/HDD/ ;;
-            v) cd /media/vincekd/HDD/Users/Vincent/ ;;
+            df) cd ~/.dotfiles/ ;;
             *) echo "'$1' is not registered" ;;
         esac
     fi
