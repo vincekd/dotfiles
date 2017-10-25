@@ -35,8 +35,8 @@
                     ;;:family "Noto Serif"
                     ;;:width 'ultra-expanded
                     ;;:height 105
-                    :family "Noto Mono"
-                    :height 100)
+                    ;;:height 100
+                    :family "Noto Mono")
 
 ;;
 ;; get melpa packages in package.el
