@@ -93,6 +93,7 @@ alias lss="ll | grep -i"
 alias cdl="cd -"
 alias gs="git status"
 alias gittop="git rev-parse --show-toplevel"
+alias tailf="tail -f"
 
 if [[ "$OSTYPE" == "cygwin" ]]; then
     alias emo="/cygdrive/c/emacs/bin/runemacs.exe"
