@@ -29,23 +29,30 @@
 (setenv "SHELL" shell-file-name)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-
-(set-face-attribute 'default nil
-                    ;;:family "Consolas"
-                    ;;:family "Noto Serif"
-                    ;;:width 'ultra-expanded
-                    ;;:height 105
-                    ;;:height 100
-                    :family "Noto Mono")
+(defvar font-families
+  '("Noto Sans Mono" "Noto Mono"))
+;;(defvar family ())
+(set-face-attribute
+  'default nil
+  ;;:family "Consolas"
+  ;;:family "Noto Serif"
+  :family "Noto Sans Mono"
+  ;;:family "Noto Mono"
+  ;;:width 'ultra-expanded
+  ;;:height 105
+  ;;:height 100
+  :height 105
+  )
+;;(set-frame-font "Noto Mono" nil t)
 
 ;;
 ;; get melpa packages in package.el
 ;;
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ;;("marmalade" . "http://marmalade-repo.org/packages/")
-                         ))
+                          ("gnu" . "http://elpa.gnu.org/packages/")
+                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
+                          ))
 (package-initialize)
 
 (require 'cl)
@@ -58,30 +65,30 @@
   ;;   company company-shell company-web company-flx company-dict
   ;;   highlight-indent-guides hl-todo
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
-             yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
-             groovy-mode groovy-imports smartparens syntax-subword
-             python-mode scss-mode  projectile auto-complete nlinum
-             flx-ido idomenu ido-vertical-mode ido-completing-read+
-             gradle-mode ace-window auto-package-update rainbow-mode
-             flycheck web-mode magit expand-region shackle golden-ratio
-             golden-ratio-scroll-screen dired-quick-sort smart-mode-line
-             package-lint ert shut-up aggressive-indent json-mode dash
-             smex pcre2el comment-tags ess typescript-mode
-             ;;themes
-             zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
-             tangotango-theme)
+     yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
+     groovy-mode groovy-imports smartparens syntax-subword
+     python-mode scss-mode  projectile auto-complete nlinum
+     flx-ido idomenu ido-vertical-mode ido-completing-read+
+     gradle-mode ace-window auto-package-update rainbow-mode
+     flycheck web-mode magit expand-region shackle golden-ratio
+     golden-ratio-scroll-screen dired-quick-sort smart-mode-line
+     package-lint ert shut-up aggressive-indent json-mode dash
+     smex pcre2el comment-tags ess typescript-mode
+     ;;themes
+     zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
+     tangotango-theme)
   "A list of packages to ensure are installed at launch.")
 
 ;; conditional package adds
 (if is-windows
-    (nconc my-packages '(cygwin-mount))
+  (nconc my-packages '(cygwin-mount))
   ;;no linux-specific packages
   )
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
-        when (not (package-installed-p p)) do (return nil)
-        finally (return t)))
+    when (not (package-installed-p p)) do (return nil)
+    finally (return t)))
 
 (unless (my-packages-installed-p)
   ;; check for new packages (package versions)
@@ -111,54 +118,54 @@
 ;; general emacs
 ;;
 (setq transient-mark-mode t ;; enable visual feedback on selections
-      scroll-step 1 ;; scroll line by line
-      ;;confirm-kill-emacs 'y-or-n-p ;; don't kill emacs without prompt
-      require-final-newline t
-      save-interprogram-paste-before-kill t
-      ;; scroll comp output
-      compilation-scroll-output 1
-      compilation-window-height 10
-      apropos-do-all t
-      mouse-yank-at-point t
-      require-final-newline t
-      visible-bell t
-      ring-bell-function 'ignore
-      load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain
+  scroll-step 1 ;; scroll line by line
+  ;;confirm-kill-emacs 'y-or-n-p ;; don't kill emacs without prompt
+  require-final-newline t
+  save-interprogram-paste-before-kill t
+  ;; scroll comp output
+  compilation-scroll-output 1
+  compilation-window-height 10
+  apropos-do-all t
+  mouse-yank-at-point t
+  require-final-newline t
+  visible-bell t
+  ring-bell-function 'ignore
+  load-prefer-newer t
+  ediff-window-setup-function 'ediff-setup-windows-plain
 
-      ;; buffer encoding
-      buffer-file-coding-system 'utf-8-unix
-      default-file-name-coding-system 'utf-8-unix
-      default-keyboard-coding-system 'utf-8-unix
-      default-process-coding-system '(utf-8-unix . utf-8-unix)
-      default-sendmail-coding-system 'utf-8-unix
-      default-terminal-coding-system 'utf-8-unix
+  ;; buffer encoding
+  buffer-file-coding-system 'utf-8-unix
+  default-file-name-coding-system 'utf-8-unix
+  default-keyboard-coding-system 'utf-8-unix
+  default-process-coding-system '(utf-8-unix . utf-8-unix)
+  default-sendmail-coding-system 'utf-8-unix
+  default-terminal-coding-system 'utf-8-unix
 
-      ;; custom file
-      custom-file (concat em-dir "custom.el"))
+  ;; custom file
+  custom-file (concat em-dir "custom.el"))
 ;; (load custom-file :noerror)
 
 ;; put backup files in single directory
 (defvar backup-file-dir (concat em-dir "backup/"))
 (setq
- backup-directory-alist `(("." . ,backup-file-dir))
- make-backup-files t    ; make backups
- backup-by-copying t    ; Don't delink hardlinks
- version-control t      ; Use version numbers on backups
- delete-old-versions t  ; Automatically delete excess backups
- kept-new-versions 10    ; how many of the newest versions to keep
- kept-old-versions 0    ; and how many of the old
- delete-by-moving-to-trash t ; obvs
- ;;make-backup-file-name-function 'my-backup-file-name ;custom backup func
- )
+  backup-directory-alist `(("." . ,backup-file-dir))
+  make-backup-files t    ; make backups
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 10    ; how many of the newest versions to keep
+  kept-old-versions 0    ; and how many of the old
+  delete-by-moving-to-trash t ; obvs
+  ;;make-backup-file-name-function 'my-backup-file-name ;custom backup func
+  )
 
 ;;disable right clicks and such
 (dolist (k '([mouse-2] [down-mouse-2] [drag-mouse-2] [double-mouse-2] [triple-mouse-2]
-             [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
-             [down-mouse-4] [drag-mouse-4]
-             [down-mouse-5] [drag-mouse-5]))
-             ;; [mouse-4] [double-mouse-4] [triple-mouse-4]
-             ;; [mouse-5] [double-mouse-5] [triple-mouse-5]))
+              [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
+              [down-mouse-4] [drag-mouse-4]
+              [down-mouse-5] [drag-mouse-5]))
+  ;; [mouse-4] [double-mouse-4] [triple-mouse-4]
+  ;; [mouse-5] [double-mouse-5] [triple-mouse-5]))
   (global-unset-key k))
 
 ;; use y or n instead of yes or not
@@ -167,7 +174,7 @@
 
 ;; set gui window size
 (if (window-system)
-    (set-frame-size (selected-frame) 124 40))
+  (set-frame-size (selected-frame) 124 40))
 
 ;; color theme
 (setq custom-safe-themes t)
@@ -197,7 +204,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (if (boundp 'scroll-bar-mode)
-    (scroll-bar-mode -1))
+  (scroll-bar-mode -1))
 
 ;; Parenthesis matching
 (show-paren-mode 1)
@@ -216,9 +223,9 @@
 position between `back-to-indentation' and `beginning-of-line'."
   (interactive "^")
   (if (eq last-command 'my--smart-beginning-of-line)
-      (if (= (line-beginning-position) (point))
-          (back-to-indentation)
-          (beginning-of-line))
+    (if (= (line-beginning-position) (point))
+      (back-to-indentation)
+      (beginning-of-line))
     (back-to-indentation)))
 
 (defun my--smart-end-of-line ()
@@ -226,8 +233,8 @@ position between `back-to-indentation' and `beginning-of-line'."
 position between last non-whitespace and `end-of-line'."
   (interactive "^")
   (if (and (eq last-command 'my--smart-end-of-line)
-           (= (line-end-position) (point)))
-      (skip-syntax-backward " " (line-beginning-position))
+        (= (line-end-position) (point)))
+    (skip-syntax-backward " " (line-beginning-position))
     (end-of-line)))
 
 (defun no-action ()
@@ -292,6 +299,7 @@ position between last non-whitespace and `end-of-line'."
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
+(setq lisp-indent-offset 2)
 (setq css-indent-offset 2)
 (setq web-indent-offset 2)
 (set-default 'tab-always-indent 'complete)
@@ -305,17 +313,17 @@ position between last non-whitespace and `end-of-line'."
 (setq comment-tags-keymap-prefix (kbd "C-c t"))
 (with-eval-after-load "comment-tags"
   (setq comment-tags-keyword-faces
-        `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
-          ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
-          ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
-          ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
-          ("KLUDGE" . ,(list :weight 'bold :foreground "#E8B71A"))
-          ("XXX" . ,(list :weight 'bold :foreground "#F7EAC8"))
-          ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
-          ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
+    `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
+       ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
+       ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
+       ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
+       ("KLUDGE" . ,(list :weight 'bold :foreground "#E8B71A"))
+       ("XXX" . ,(list :weight 'bold :foreground "#F7EAC8"))
+       ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
+       ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
   (setq comment-tags-comment-start-only t
-        comment-tags-require-colon t
-        comment-tags-case-sensitive t))
+    comment-tags-require-colon t
+    comment-tags-case-sensitive t))
 (add-hook 'prog-mode-hook 'comment-tags-mode)
 
 
@@ -338,8 +346,8 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'aggressive-indent-mode "aggressive-indent")
 (with-eval-after-load "aggressive-indent"
   (setq aggressive-indent-excluded-modes (append
-                                          aggressive-indent-excluded-modes
-                                          '())))
+                                           aggressive-indent-excluded-modes
+                                           '())))
 ;;(add-hook 'prog-mode-hook 'aggressive-indent-mode)
 
 
@@ -390,12 +398,12 @@ position between last non-whitespace and `end-of-line'."
   ;; need to set this for special font cache I guess (https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25148)
   (setq inhibit-compacting-font-caches t)
   (setq whitespace-display-mappings
-        ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-        '(
-          (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-          (newline-mark 10 [182 10]) ; LINE FEED,
-          (tab-mark 9 [9655 9] [92 9]) ; tab
-          )))
+    ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+    '(
+       (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+       (newline-mark 10 [182 10]) ; LINE FEED,
+       (tab-mark 9 [9655 9] [92 9]) ; tab
+       )))
 ;;(global-whitespace-mode t)
 ;;(add-hook 'prog-mode-hook 'whitespace-mode)
 
@@ -437,18 +445,18 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'js2-mode "js2-mode")
 (with-eval-after-load "js2-mode"
   (setq
-   ;; js version (2.0)
-   js2-language-version 200
-   ;; ignore global libraries
-   js2-global-externs '("jQuery" "$" "_" "angular")
-   ;; include common keywords
-   js2-include-browser-externs t
-   js2-include-node-externs t
-   ;; exclude rhino (mozilla js compiler) keywords
-   js2-include-rhino-externs nil
-   js2-mode-show-parse-errors nil
-   js2-mode-show-strict-warnings nil
-   js-switch-indent-offset 4)
+    ;; js version (2.0)
+    js2-language-version 200
+    ;; ignore global libraries
+    js2-global-externs '("jQuery" "$" "_" "angular")
+    ;; include common keywords
+    js2-include-browser-externs t
+    js2-include-node-externs t
+    ;; exclude rhino (mozilla js compiler) keywords
+    js2-include-rhino-externs nil
+    js2-mode-show-parse-errors nil
+    js2-mode-show-strict-warnings nil
+    js-switch-indent-offset 4)
   (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
@@ -456,14 +464,14 @@ position between last non-whitespace and `end-of-line'."
 ;; JS mode
 (autoload 'js-mode "js")
 (with-eval-after-load
-    (setq
-     ;;js-language-version 200
-     js-indent-level 4
-     ;;js-expr-indent-offset 8
-     js-indent-first-init 'dynamic
-     ;; only works in emacs 26+
-     js-chain-indent t
-     js-indent-align-list-continuation nil))
+  (setq
+    ;;js-language-version 200
+    js-indent-level 4
+    ;;js-expr-indent-offset 8
+    js-indent-first-init 'dynamic
+    ;; only works in emacs 26+
+    js-chain-indent t
+    js-indent-align-list-continuation nil))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 
 
@@ -502,25 +510,25 @@ position between last non-whitespace and `end-of-line'."
 ;; ignored files for ag-search and projectile
 (defvar ignored-dirs
   '("*.gradle/"
-    "*gradle/"
-    "*.settings/"
-    "*build/"
-    "*lib/"
-    "*libs/"
-    "*bower_components/"
-    "*tinymce/"
-    "*bootstrap/"
-    "*.git/"
-    "*media/"
-    "*images/"
-    "/main-application/uploads/"))
+     "*gradle/"
+     "*.settings/"
+     "*build/"
+     "*lib/"
+     "*libs/"
+     "*bower_components/"
+     "*tinymce/"
+     "*bootstrap/"
+     "*.git/"
+     "*media/"
+     "*images/"
+     "/main-application/uploads/"))
 
 (require 'ag)
 (with-eval-after-load "ag"
   (setq ag-resuse-window nil
-        ;;ag-arguments (append '("-l") ag-arguments)
-        ag-ignore-list (append ignored-dirs '("*.log" "*.csv"))
-        ag-reuse-buffers t))
+    ;;ag-arguments (append '("-l") ag-arguments)
+    ag-ignore-list (append ignored-dirs '("*.log" "*.csv"))
+    ag-reuse-buffers t))
 
 
 ;; projectile stuff
@@ -528,7 +536,7 @@ position between last non-whitespace and `end-of-line'."
 (require 'projectile)
 (with-eval-after-load "projectile"
   (setq projectile-mode-line
-        '(:eval (format " Proj[%s]" (projectile-project-name))))
+    '(:eval (format " Proj[%s]" (projectile-project-name))))
   ;;(setq projectile-mode-line nil)
   ;; set find-file to C-O (done in my-keys-minor-mode)
   (setq projectile-completion-system 'ido)
@@ -539,33 +547,33 @@ position between last non-whitespace and `end-of-line'."
   (setq projectile-verbose nil)
 
   (setq projectile-globally-ignored-file-suffixes
-        '(".png"
-          ".pdf"
-          ".class"
-          ".gif"
-          ".jpg"
-          ".eot"
-          ".ttf"
-          ".woff"
-          ".woff2"
-          ".xlsx"
-          ".doc"
-          ".docx"
-          ".jar"
-          ".project"
-          ".classpath"
-          ".zip"
-          ".tern-project"))
+    '(".png"
+       ".pdf"
+       ".class"
+       ".gif"
+       ".jpg"
+       ".eot"
+       ".ttf"
+       ".woff"
+       ".woff2"
+       ".xlsx"
+       ".doc"
+       ".docx"
+       ".jar"
+       ".project"
+       ".classpath"
+       ".zip"
+       ".tern-project"))
   (setq projectile-globally-ignored-files
-        (append '("GRTAGS"
-                  "GPATH"
-                  "GTAGS"
-                  "TAGS"
-                  "*.min.js")
-                projectile-globally-ignored-files))
+    (append '("GRTAGS"
+               "GPATH"
+               "GTAGS"
+               "TAGS"
+               "*.min.js")
+      projectile-globally-ignored-files))
   (setq projectile-globally-ignored-directories
-        (append ignored-dirs
-         projectile-globally-ignored-directories)))
+    (append ignored-dirs
+      projectile-globally-ignored-directories)))
 (projectile-mode 1)
 
 
@@ -573,9 +581,9 @@ position between last non-whitespace and `end-of-line'."
 (require 'flx-ido)
 (require 'ido-completing-read+)
 (setq
- ido-enable-flex-matching t
- ido-use-faces nil
- ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+  ido-enable-flex-matching t
+  ido-use-faces nil
+  ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 (ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
@@ -641,8 +649,8 @@ position between last non-whitespace and `end-of-line'."
   (setq wg-workgroups-mode-exit-save-behavior 'ask) ; Options: 'save 'ask nil
   ;;(setq wg-morph-on nil)
   (setq wg-mode-line-decor-left-brace "["
-        wg-mode-line-decor-right-brace "]"
-        wg-mode-line-decor-divider ":"))
+    wg-mode-line-decor-right-brace "]"
+    wg-mode-line-decor-divider ":"))
 (define-key global-map (kbd "C-c z") 'workgroups-mode)
 
 
@@ -651,9 +659,9 @@ position between last non-whitespace and `end-of-line'."
 (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
 (with-eval-after-load "web-mode"
   (setq web-mode-markup-indent-offset 2
-        web-mode-enable-auto-expanding t
-        web-mode-enable-current-element-highlight t
-        web-mode-auto-close-style 2))
+    web-mode-enable-auto-expanding t
+    web-mode-enable-current-element-highlight t
+    web-mode-auto-close-style 2))
 
 
 ;; make unique names of tabs and shit
@@ -667,7 +675,7 @@ position between last non-whitespace and `end-of-line'."
   ;; (define-key global-map "\C-ca" 'org-agenda)
   (setq org-log-done t)
   (setq org-agenda-files (list (concat org-mode-dir "work.org")
-                               (concat org-mode-dir "life.org"))))
+                           (concat org-mode-dir "life.org"))))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 
@@ -706,7 +714,7 @@ position between last non-whitespace and `end-of-line'."
 ;; ;; add recently opened files to the menu
 (require 'recentf)
 (setq recentf-max-saved-items 200
-      recentf-max-menu-items 20)
+  recentf-max-menu-items 20)
 (recentf-mode 1)
 
 
@@ -725,15 +733,15 @@ position between last non-whitespace and `end-of-line'."
   (require 'dired-x)
   (require 'dired-quick-sort)
   (setq ls-lisp-use-insert-directory-program t
-        ;;dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$")
-        dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
+    ;;dired-omit-files (concat dired-omit-files "\\|^\\.\\.?$")
+    dired-listing-switches "-Faho --color=auto --group-directories-first --sort=time")
   (dired-quick-sort-setup)
   (add-hook 'dired-mode-hook
-            (lambda ()
-              (dired-hide-details-mode)
-              (dired-sort-toggle-or-edit)
-              ;;(dired-omit-mode)
-              )))
+    (lambda ()
+      (dired-hide-details-mode)
+      (dired-sort-toggle-or-edit)
+      ;;(dired-omit-mode)
+      )))
 
 ;;(defvar ls-opts (shell-command-to-string ". ~/.bashrc; echo -n $LS_OPTS"))
 ;; from .bashrc (probably a better way to get this) (above)
