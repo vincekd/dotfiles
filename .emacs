@@ -63,7 +63,7 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo
+  ;;   highlight-indent-guides hl-todo ;; ess
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
      groovy-mode groovy-imports smartparens syntax-subword
@@ -73,7 +73,7 @@
      flycheck web-mode magit expand-region shackle golden-ratio
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
-     smex pcre2el comment-tags ess typescript-mode
+     smex pcre2el comment-tags typescript-mode
      ;;themes
      zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
      tangotango-theme)
@@ -241,6 +241,13 @@ position between last non-whitespace and `end-of-line'."
   "Dummy function that does nothing"
   (interactive "^"))
 
+(defun sudo-find-file ()
+  "File file as root."
+  (interactive)
+  (let ((root-file "/sudo:root@localhost:"))
+    (find-file (concat root-file
+                 (read-file-name "Find file (as su): ")))))
+
 (defun recentf-find-file ()
   "Find a recent file using ido."
   (interactive)
@@ -274,6 +281,7 @@ position between last non-whitespace and `end-of-line'."
     (define-key map (kbd "C-S-R") 'projectile-find-file)
     (define-key map (kbd "C-S-f") 'projectile-ag)
     (define-key map (kbd "C-c k") 'kill-other-buffers)
+    (define-key map (kbd "C-x C-r") 'sudo-find-file)
     ;;(define-key map (kbd "C-\t") 'company-complete-common)
     map)
   "my-keys-minor-mode keymap.")
