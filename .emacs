@@ -293,6 +293,12 @@ position between last non-whitespace and `end-of-line'."
 
 (my-keys-minor-mode 1)
 
+;; (defadvice find-file (after find-file-sudo activate)
+;;   "Find file as root if necessary."
+;;   (unless (and buffer-file-name
+;;                (file-writable-p buffer-file-name))
+;;     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 ;; (defmacro rename-modeline (package-name mode new-name)
 ;;   `(eval-after-load ,package-name
 ;;      '(defadvice ,mode (after rename-modeline activate)
@@ -535,7 +541,7 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "ag"
   (setq ag-resuse-window nil
     ;;ag-arguments (append '("-l") ag-arguments)
-    ag-ignore-list (append ignored-dirs '("*.log" "*.csv"))
+    ag-ignore-list (append ignored-dirs '("*.log" "*.csv" "*.min.*"))
     ag-reuse-buffers t))
 
 
