@@ -63,17 +63,17 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo ;; ess
+  ;;   highlight-indent-guides hl-todo ess 
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
      groovy-mode groovy-imports smartparens syntax-subword
      python-mode scss-mode  projectile auto-complete nlinum
      flx-ido idomenu ido-vertical-mode ido-completing-read+
      gradle-mode ace-window auto-package-update rainbow-mode
-     flycheck web-mode magit expand-region shackle golden-ratio
+     flycheck web-mode expand-region shackle golden-ratio
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
-     smex pcre2el comment-tags typescript-mode
+     smex pcre2el comment-tags typescript-mode ;; magit
      ;;themes
      zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
      tangotango-theme)
