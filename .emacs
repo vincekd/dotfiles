@@ -63,7 +63,7 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo ess 
+  ;;   highlight-indent-guides hl-todo ess magit indium
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
      groovy-mode groovy-imports smartparens syntax-subword
@@ -73,7 +73,7 @@
      flycheck web-mode expand-region shackle golden-ratio
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
-     smex pcre2el comment-tags typescript-mode ;; magit
+     smex pcre2el comment-tags typescript-mode go-mode go-autocomplete
      ;;themes
      zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
      tangotango-theme)
@@ -447,6 +447,7 @@ position between last non-whitespace and `end-of-line'."
   (setq flycheck-idle-change-delay 2)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (flycheck-add-mode 'javascript-eslint 'js-mode)
+  (flycheck-add-mode 'typescript-tslint 'typescript-mode)
   (flycheck-add-mode 'groovy 'groovy-mode)
   (flycheck-add-mode 'html-tidy 'web-mode))
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
@@ -454,6 +455,7 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'js-mode-hook 'flycheck-mode)
 (add-hook 'groovy-mode-hook 'flycheck-mode)
 (add-hook 'web-mode 'flycheck-mode)
+(add-hook 'typescript-mode 'flycheck-mode)
 
 
 (autoload 'js2-mode "js2-mode")
@@ -518,6 +520,12 @@ position between last non-whitespace and `end-of-line'."
 
 
 (autoload 'auto-complete-mode "auto-complete")
+(ac-config-default)
+(global-auto-complete-mode nil)
+(with-eval-after-load "auto-complete"
+  (setq ac-trigger-key "TAB"
+    ;;ac-use-overriding-local-map t
+    ))
 (add-hook 'prog-mode-hook 'auto-complete-mode)
 
 
@@ -535,13 +543,14 @@ position between last non-whitespace and `end-of-line'."
      "*.git/"
      "*media/"
      "*images/"
-     "/main-application/uploads/"))
+     "/main-application/uploads/"
+     "*node_modules/"))
 
 (require 'ag)
 (with-eval-after-load "ag"
   (setq ag-resuse-window nil)
   (setq ag-reuse-buffers t)
-  (setq-default ag-ignore-list (append ignored-dirs '("*.log" "*.csv" "*.min.*"))))
+  (setq-default ag-ignore-list (append ignored-dirs '("*.log" "*.csv" "*.min.*" "#*#"))))
 
 
 ;; projectile stuff

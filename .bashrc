@@ -48,6 +48,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
+export GOPATH=~/go
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -67,6 +68,10 @@ fi
 
 if [ -d ~/bin/ ]; then
     PATH=$PATH:~/bin/
+fi
+
+if [ -d ~/dev/go_appengine ]; then
+    PATH=$PATH:~/dev/go_appengine/
 fi
 
 export PATH
@@ -240,3 +245,13 @@ gg () {
 #     fi
 # } >&1 2>&2
 
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/vince/dev/google-cloud-sdk/path.bash.inc' ]; then
+    source '/home/vince/dev/google-cloud-sdk/path.bash.inc';
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/vince/dev/google-cloud-sdk/completion.bash.inc' ]; then
+    source '/home/vince/dev/google-cloud-sdk/completion.bash.inc';
+fi
