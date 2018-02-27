@@ -454,8 +454,8 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
 (add-hook 'groovy-mode-hook 'flycheck-mode)
-(add-hook 'web-mode 'flycheck-mode)
-(add-hook 'typescript-mode 'flycheck-mode)
+(add-hook 'web-mode-hook 'flycheck-mode)
+(add-hook 'typescript-mode-hook 'flycheck-mode)
 
 
 (autoload 'js2-mode "js2-mode")
