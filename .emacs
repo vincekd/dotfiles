@@ -448,6 +448,7 @@ position between last non-whitespace and `end-of-line'."
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (flycheck-add-mode 'javascript-eslint 'js-mode)
   (flycheck-add-mode 'typescript-tslint 'typescript-mode)
+  (flycheck-add-mode 'go-build 'go-mode)
   (flycheck-add-mode 'groovy 'groovy-mode)
   (flycheck-add-mode 'html-tidy 'web-mode))
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
@@ -456,6 +457,7 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'groovy-mode-hook 'flycheck-mode)
 (add-hook 'web-mode-hook 'flycheck-mode)
 (add-hook 'typescript-mode-hook 'flycheck-mode)
+(add-hook 'go-mode-hook 'flycheck-mode)
 
 
 (autoload 'js2-mode "js2-mode")
