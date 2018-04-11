@@ -63,14 +63,14 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo ess magit indium
+  ;;   highlight-indent-guides hl-todo ess indium hydra nlinum
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
-     groovy-mode groovy-imports smartparens syntax-subword
-     python-mode scss-mode  projectile auto-complete nlinum
+     groovy-mode groovy-imports smartparens syntax-subword magit
+     python-mode scss-mode  projectile auto-complete
      flx-ido idomenu ido-vertical-mode ido-completing-read+
      gradle-mode ace-window auto-package-update rainbow-mode
-     flycheck web-mode expand-region shackle golden-ratio
+     flycheck web-mode expand-region shackle golden-ratio rust-mode
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
      smex pcre2el comment-tags typescript-mode go-mode go-autocomplete
@@ -357,33 +357,33 @@ position between last non-whitespace and `end-of-line'."
 ;;(smart-mode-line-enable)
 
 
-(autoload 'aggressive-indent-mode "aggressive-indent")
-(with-eval-after-load "aggressive-indent"
-  (setq aggressive-indent-excluded-modes (append
-                                           aggressive-indent-excluded-modes
-                                           '())))
-;;(add-hook 'prog-mode-hook 'aggressive-indent-mode)
+;; (autoload 'aggressive-indent-mode "aggressive-indent")
+;; (with-eval-after-load "aggressive-indent"
+;;   (setq aggressive-indent-excluded-modes (append
+;;                                            aggressive-indent-excluded-modes
+;;                                            '())))
+;; (add-hook 'prog-mode-hook 'aggressive-indent-mode)
 
 
-;; (require 'shackle)
-;; ;;(setq shackle-default-rule '(:select t))
-;; (setq shackle-rules
-;;       '((compilation-mode :noselect t)
-;;         ("*Ido Completions*" :noselect t :other t)
-;;         ("*eshell*" :select t :same t)
-;;         ("*Shell Command Output*" :noselect t)
-;;         ("*shell*" :select t :same t)
-;;         ("*Messages*" :noselect t :inhibit-window-quit t :other t)
-;;         ("*Metahelp*" :select t :same t)
-;;         ("*Help*" :select t :same t)
-;;         ("*Completions*" :noselect t :other t)
-;;         ("*Warnings*" :noselect t :other t)
-;;         ("*Compile-Log*" :noselect t :other t)
-;;         (magit-status-mode :select t :inhibit-window-quit t :same t)
-;;         (magit-log-mode :select t :inhibit-window-quit t :same t)
-;;         ;;projectile search
-;;         ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
-;; (shackle-mode 1)
+(require 'shackle)
+;;(setq shackle-default-rule '(:select t))
+(setq shackle-rules
+  '((compilation-mode :noselect t)
+     ("*Ido Completions*" :noselect t :other t)
+     ("*eshell*" :select t :same t)
+     ("*Shell Command Output*" :noselect t)
+     ("*shell*" :select t :same t)
+     ("*Messages*" :noselect t :inhibit-window-quit t :other t)
+     ("*Metahelp*" :select t :same t)
+     ("*Help*" :select t :same t)
+     ("*Completions*" :noselect t :other t)
+     ("*Warnings*" :noselect t :other t)
+     ("*Compile-Log*" :noselect t :other t)
+     (magit-status-mode :select t :inhibit-window-quit t :same t)
+     (magit-log-mode :select t :inhibit-window-quit t :same t)
+     ;;projectile search
+     ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
+(shackle-mode 1)
 
 
 ;; (require 'expand-region)
@@ -423,7 +423,6 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;;(global-whitespace-cleanup-mode 1)
-;;(require 'whitespace-cleanup-mode)
 (autoload 'whitespace-cleanup-mode "whitespace-cleanup-mode")
 (add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
@@ -645,9 +644,33 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'prog-mode-hook 'smartparens-mode)
 
 
-;;git commands (doesn't work very well)
-;;(require 'magit)
-;;(global-set-key (kbd "C-c g s") 'magit-status)
+;; git stuff
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
+(setq
+  ;; use ido to look for branches
+  magit-completing-read-function 'magit-ido-completing-read
+  ;; don't put "origin-" in front of new branch names by default
+  magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
+  ;; open magit status in same window as current buffer
+  magit-status-buffer-switch-function 'switch-to-buffer
+  ;; highlight word/letter changes in hunk diffs
+  magit-diff-refine-hunk t
+  ;; ask me to save buffers
+  magit-save-some-buffers t
+  ;; pop the process buffer if we're taking a while to complete
+  magit-process-popup-time 10
+  ;; ask me if I want a tracking upstream
+  magit-set-upstream-on-push 'askifnotset)
+;; (defhydra hydra-magit (:color blue :columns 8)
+;;   "Magit"
+;;   ("c" magit-status "status")
+;;   ("C" magit-checkout "checkout")
+;;   ("v" magit-branch-manager "branch manager")
+;;   ("m" magit-merge "merge")
+;;   ("l" magit-log "log")
+;;   ("!" magit-git-command "command")
+;;   ("$" magit-process "process"))
 
 
 ;; not working in emacs 25.2

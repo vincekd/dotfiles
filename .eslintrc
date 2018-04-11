@@ -7,9 +7,13 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
     },
-    "globals": {},
+    "globals": {
+    },
     "rules": {
         "no-console": 0,
         "indent": 0,
