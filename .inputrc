@@ -14,6 +14,7 @@ set mark-symlinked-directories on
 set convert-meta off
 set expand-tilde off
 set completion-query-items 200
+#set emacs-editing-mode on
 
 #
 # Key bindings
@@ -23,21 +24,28 @@ set completion-query-items 200
 "\e[B": history-search-forward
 #down up arrow
 "\e[A": history-search-backward
+#meta-p
+"\ep": history-search-backward
+"\en": history-search-forward
 #arrow right
 "\e[1;5C": forward-word
 #arrow left
 "\e[1;5D": backward-word
+#kill word
+"\ed":kill-word
+#paste
+#"\ey": yank-pop
+
 # ctrl-backspace GAAAAA THIS DOESN'T WORK
+#"Control-w": copy-region-as-kill
+#"\C-Rubout": backward-kill-word
+#"\e^?": unix-word-rubout
 #"\e[1;^?": unix-word-rubout
 #"\e[1;^?": unix-word-rubout
 #"\C-^?": unix-word-rubout
 #"\C-^_": unix-word-rubout
 #"\C-\b": unix-word-rubout
 #"\C-t": unix-word-rubout
-
-#unused bindings
-#bind "\M-d":kill-word
-#"\C-y": yank-pop
 
 $if Bash
   # 'Magic Space'

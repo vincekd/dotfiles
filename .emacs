@@ -61,9 +61,9 @@
   ;;unused packages:
   ;;   grizzl gitconfig-mode gitignore-mode diminish
   ;;   imenu+ sass-mode helm highlight-indentation
-  ;;   indent-guide volatile-highlights persp-mode
+  ;;   indent-guide volatile-highlights persp-mode indium
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo ess indium hydra nlinum
+  ;;   highlight-indent-guides hl-todo ess hydra nlinum
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
      groovy-mode groovy-imports smartparens syntax-subword magit
@@ -133,6 +133,9 @@
   load-prefer-newer t
   ediff-window-setup-function 'ediff-setup-windows-plain
 
+  ;; completion
+  completion-auto-help nil
+
   ;; buffer encoding
   buffer-file-coding-system 'utf-8-unix
   default-file-name-coding-system 'utf-8-unix
@@ -170,7 +173,6 @@
 
 ;; use y or n instead of yes or not
 (fset 'yes-or-no-p 'y-or-n-p)
-
 
 ;; set gui window size
 (if (window-system)
@@ -269,9 +271,10 @@ position between last non-whitespace and `end-of-line'."
     (define-key map (kbd "C-a") 'my--smart-beginning-of-line)
     (define-key map (kbd "C-e") 'my--smart-end-of-line)
     (define-key map (kbd "C-t") 'no-action) ;get rid of char swapping
+    ;;(define-key map (kbd "C-x C-b") 'ibuffer)
+    (define-key map (kbd "C-x C-b") 'no-action) ;get rid of buffer lists
     (define-key map (kbd "M-j") (lambda () (interactive) (join-line -1)))
     (define-key map (kbd "M-/") 'hippie-expand)
-    (define-key map (kbd "C-x C-b") 'ibuffer)
     (define-key map (kbd "C-s") 'isearch-forward-regexp)
     (define-key map (kbd "C-r") 'isearch-backward-regexp)
     (define-key map (kbd "C-M-s") 'isearch-forward)
@@ -459,28 +462,28 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'go-mode-hook 'flycheck-mode)
 
 
-(autoload 'js2-mode "js2-mode")
-(with-eval-after-load "js2-mode"
-  (setq
-    ;; js version (2.0)
-    js2-language-version 200
-    ;; ignore global libraries
-    js2-global-externs '("jQuery" "$" "_" "angular")
-    ;; include common keywords
-    js2-include-browser-externs t
-    js2-include-node-externs t
-    ;; exclude rhino (mozilla js compiler) keywords
-    js2-include-rhino-externs nil
-    js2-mode-show-parse-errors nil
-    js2-mode-show-strict-warnings nil
-    js-switch-indent-offset 4)
-  (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
+;; (autoload 'js2-mode "js2-mode")
+;; (with-eval-after-load "js2-mode"
+;;   (setq
+;;     ;; js version (2.0)
+;;     js2-language-version 200
+;;     ;; ignore global libraries
+;;     js2-global-externs '("jQuery" "$" "_" "angular")
+;;     ;; include common keywords
+;;     js2-include-browser-externs t
+;;     js2-include-node-externs t
+;;     ;; exclude rhino (mozilla js compiler) keywords
+;;     js2-include-rhino-externs nil
+;;     js2-mode-show-parse-errors nil
+;;     js2-mode-show-strict-warnings nil
+;;     js-switch-indent-offset 4)
+;;   (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 
 ;; JS mode
 (autoload 'js-mode "js")
-(with-eval-after-load
+(with-eval-after-load "js"
   (setq
     ;;js-language-version 200
     js-indent-level 4
@@ -490,6 +493,12 @@ position between last non-whitespace and `end-of-line'."
     js-chain-indent t
     js-indent-align-list-continuation nil))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+
+
+;; use indium
+;; (with-eval-after-load indium
+;;   (setq
+;;     indium-debugger-blackbox-regexps '("node_modules/*")))
 
 
 (autoload 'json-mode "json-mode")

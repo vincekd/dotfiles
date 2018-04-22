@@ -1,4 +1,4 @@
-#vincekd bashrc file
+# vincekd bashrc file
 
 # drop out if not interactive shell
 if [ -z "$PS1" ]; then
