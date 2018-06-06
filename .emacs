@@ -75,8 +75,9 @@
      package-lint ert shut-up aggressive-indent json-mode dash
      smex pcre2el comment-tags typescript-mode go-mode go-autocomplete
      ;;themes
-     zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
-     tangotango-theme)
+     ;; zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
+     ;; tangotango-theme goose-theme
+     gruvbox-theme)
   "A list of packages to ensure are installed at launch.")
 
 ;; conditional package adds
@@ -179,10 +180,14 @@
   (set-frame-size (selected-frame) 124 40))
 
 ;; color theme
+;;(add-to-list 'custom-theme-load-path (concat em-dir "themes/"))
 (setq custom-safe-themes t)
-;;(load-theme 'zenburn t)
-(load-theme 'gruvbox t)
-;;(load-theme 'tangotango t)
+;; (load-file (concat em-dir "themes/meaculpa-theme.el"))
+;; (load-theme 'zenburn t)
+ (load-theme 'gruvbox-light-soft t)
+;; (load-theme 'goose t)
+;; (load-theme 'tangotango t)
+;; (load-theme 'meaculpa t)
 
 ;; (setq frame-title-format
 ;;       '((:eval (if (buffer-file-name)
@@ -382,10 +387,13 @@ position between last non-whitespace and `end-of-line'."
      ("*Completions*" :noselect t :other t)
      ("*Warnings*" :noselect t :other t)
      ("*Compile-Log*" :noselect t :other t)
+     ("*ag search*" :other t)
      (magit-status-mode :select t :inhibit-window-quit t :same t)
      (magit-log-mode :select t :inhibit-window-quit t :same t)
      ;;projectile search
-     ("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)))
+     ;;("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)
+     )
+  )
 (shackle-mode 1)
 
 
