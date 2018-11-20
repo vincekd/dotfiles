@@ -20,6 +20,11 @@ if ! shopt -oq posix; then
     elif [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
     fi
+
+    # git clone https://github.com/vincekd/git-completion.bash
+    if [ -f ~/dev/git-completion.bash/git-completion.bash ]; then
+        . ~/dev/git-completion.bash/git-completion.bash
+    fi
 fi
 
 
@@ -97,6 +102,7 @@ alias q="exit"
 alias lss="ll | grep -i"
 alias cdl="cd -"
 alias gs="git status"
+alias gd="git diff --ignore-space-change"
 alias gc="git commit -a -m "
 alias gittop="git rev-parse --show-toplevel"
 alias tailf="tail -f"

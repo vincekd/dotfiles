@@ -1,0 +1,7 @@
+# R env vars
+
+R_HOME_USER = ${HOME}/R/
+R_PROFILE_USER = ${HOME}/.Rprofile
+R_LIBS_USER = ${HOME}/R/packages/
+R_LIBS=${HOME}/R/packages/
+R_HISTFILE = ${HOME}/vince.Rhistory

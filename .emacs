@@ -63,17 +63,18 @@
   ;;   imenu+ sass-mode helm highlight-indentation
   ;;   indent-guide volatile-highlights persp-mode indium
   ;;   company company-shell company-web company-flx company-dict
-  ;;   highlight-indent-guides hl-todo ess hydra nlinum
+  ;;   highlight-indent-guides hl-todo hydra nlinum
   '(js2-mode less-css-mode workgroups2 ace-jump-mode flyspell ggtags
      yaml-mode whitespace-cleanup-mode popup ag ispell yaml-mode
      groovy-mode groovy-imports smartparens syntax-subword magit
-     python-mode scss-mode  projectile auto-complete
-     flx-ido idomenu ido-vertical-mode ido-completing-read+
+     python-mode scss-mode  projectile auto-complete rjsx-mode
+     flx-ido idomenu ido-vertical-mode ido-completing-read+ ess
      gradle-mode ace-window auto-package-update rainbow-mode
      flycheck web-mode expand-region shackle golden-ratio rust-mode
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
      smex pcre2el comment-tags typescript-mode go-mode go-autocomplete
+     ;;esup
      ;;themes
      ;; zenburn-theme color-theme-sanityinc-tomorrow gruvbox-theme
      ;; tangotango-theme goose-theme
@@ -340,8 +341,10 @@ position between last non-whitespace and `end-of-line'."
        ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
        ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
        ("KLUDGE" . ,(list :weight 'bold :foreground "#E8B71A"))
-       ("XXX" . ,(list :weight 'bold :foreground "#F7EAC8"))
-       ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
+       ;; ("XXX" . ,(list :weight 'bold :foreground "#F7EAC8"))
+       ;; ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
+       ("XXX" . ,(list :weight 'bold :foreground "#AAAAAA"))
+       ("INFO" . ,(list :weight 'bold :foreground "#AAAAAA"))
        ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
   (setq comment-tags-comment-start-only t
     comment-tags-require-colon t
@@ -388,8 +391,8 @@ position between last non-whitespace and `end-of-line'."
      ("*Warnings*" :noselect t :other t)
      ("*Compile-Log*" :noselect t :other t)
      ("*ag search*" :other t)
-     (magit-status-mode :select t :inhibit-window-quit t :same t)
-     (magit-log-mode :select t :inhibit-window-quit t :same t)
+     ;; (magit-status-mode :select t :inhibit-window-quit t :same t)
+     ;; (magit-log-mode :select t :inhibit-window-quit t :same t)
      ;;projectile search
      ;;("^\\*ag search text\\:.*" :regexp t :select t :inhibit-window-quit t :same t)
      )
@@ -454,38 +457,49 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'flycheck-mode "flycheck-mode")
 (with-eval-after-load "flycheck"
   (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
-  (setq flycheck-idle-change-delay 2)
+  (setq flycheck-idle-change-delay 30)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (flycheck-add-mode 'javascript-eslint 'js-mode)
   (flycheck-add-mode 'typescript-tslint 'typescript-mode)
+  (flycheck-add-mode 'javascript-eslint 'js-jsx-mode)
+  (flycheck-add-mode 'javascript-eslint 'rjsx-mode)
   (flycheck-add-mode 'go-build 'go-mode)
   (flycheck-add-mode 'groovy 'groovy-mode)
   (flycheck-add-mode 'html-tidy 'web-mode))
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
+(add-hook 'js-jsx-mode-hook 'flycheck-mode)
+(add-hook 'rjsx-mode 'flycheck-mode)
 (add-hook 'groovy-mode-hook 'flycheck-mode)
 (add-hook 'web-mode-hook 'flycheck-mode)
 (add-hook 'typescript-mode-hook 'flycheck-mode)
 (add-hook 'go-mode-hook 'flycheck-mode)
 
 
-;; (autoload 'js2-mode "js2-mode")
-;; (with-eval-after-load "js2-mode"
-;;   (setq
-;;     ;; js version (2.0)
-;;     js2-language-version 200
-;;     ;; ignore global libraries
-;;     js2-global-externs '("jQuery" "$" "_" "angular")
-;;     ;; include common keywords
-;;     js2-include-browser-externs t
-;;     js2-include-node-externs t
-;;     ;; exclude rhino (mozilla js compiler) keywords
-;;     js2-include-rhino-externs nil
-;;     js2-mode-show-parse-errors nil
-;;     js2-mode-show-strict-warnings nil
-;;     js-switch-indent-offset 4)
-;;   (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
+;; jsx mode
+(autoload 'rjsx-mode "rjsx-mode")
+(add-to-list 'auto-mode-alist '("\\.react.js" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx" . rjsx-mode))
+
+
+;; js2 mode
+(autoload 'js2-mode "js2-mode")
+(with-eval-after-load "js2-mode"
+  (setq
+    ;; js version (2.0)
+    js2-language-version 200
+    ;; ignore global libraries
+    js2-global-externs '("jQuery" "$" "_" "angular")
+    ;; include common keywords
+    js2-include-browser-externs t
+    js2-include-node-externs t
+    ;; exclude rhino (mozilla js compiler) keywords
+    js2-include-rhino-externs nil
+    js2-mode-show-parse-errors nil
+    js2-mode-show-strict-warnings nil
+    js-switch-indent-offset 4)
+  (add-hook 'js2-mode-hook 'my-enable-rainbow-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 
@@ -495,8 +509,10 @@ position between last non-whitespace and `end-of-line'."
   (setq
     ;;js-language-version 200
     js-indent-level 4
-    ;;js-expr-indent-offset 8
+    js-expr-indent-offset 4
+    js-paren-indent-offset 4
     js-indent-first-init 'dynamic
+    js-switch-indent-offset 4
     ;; only works in emacs 26+
     js-chain-indent t
     js-indent-align-list-continuation nil))
@@ -527,10 +543,15 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'ess-site "ess")
 (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
 
-
+;; typescript
 (autoload 'typescript-mode "typescript-mode")
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
+;; python
+(autoload 'python-mode "python")
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(with-eval-after-load "python"
+  (define-key python-mode-map (kbd "DEL") nil))
 
 (require 'syntax-subword)
 ;;(setq syntax-subword-skip-spaces t)
@@ -603,7 +624,9 @@ position between last non-whitespace and `end-of-line'."
        ".project"
        ".classpath"
        ".zip"
-       ".tern-project"))
+       ".tern-project"
+       ".kml"
+       ".kmz"))
   (setq projectile-globally-ignored-files
     (append '("GRTAGS"
                "GPATH"
@@ -662,23 +685,24 @@ position between last non-whitespace and `end-of-line'."
 
 
 ;; git stuff
-(require 'magit)
-(global-set-key (kbd "C-x g") 'magit-status)
-(setq
-  ;; use ido to look for branches
-  magit-completing-read-function 'magit-ido-completing-read
-  ;; don't put "origin-" in front of new branch names by default
-  magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
-  ;; open magit status in same window as current buffer
-  magit-status-buffer-switch-function 'switch-to-buffer
-  ;; highlight word/letter changes in hunk diffs
-  magit-diff-refine-hunk t
-  ;; ask me to save buffers
-  magit-save-some-buffers t
-  ;; pop the process buffer if we're taking a while to complete
-  magit-process-popup-time 10
-  ;; ask me if I want a tracking upstream
-  magit-set-upstream-on-push 'askifnotset)
+;; (require 'magit)
+;; (global-set-key (kbd "C-x g") 'magit-status)
+;; (setq
+;;   ;; use ido to look for branches
+;;   magit-completing-read-function 'magit-ido-completing-read
+;;   ;; don't put "origin-" in front of new branch names by default
+;;   magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
+;;   ;; open magit status in same window as current buffer
+;;   magit-status-buffer-switch-function 'switch-to-buffer
+;;   ;; highlight word/letter changes in hunk diffs
+;;   magit-diff-refine-hunk t
+;;   ;; ask me to save buffers
+;;   magit-save-some-buffers t
+;;   ;; pop the process buffer if we're taking a while to complete
+;;   magit-process-popup-time 10
+;;   ;; ask me if I want a tracking upstream
+;;   magit-set-upstream-on-push 'askifnotset)
+
 ;; (defhydra hydra-magit (:color blue :columns 8)
 ;;   "Magit"
 ;;   ("c" magit-status "status")
