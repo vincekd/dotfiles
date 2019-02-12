@@ -458,6 +458,8 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "flycheck"
   (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change)) ;;newline
   (setq flycheck-idle-change-delay 30)
+  (setq flycheck-flake8rc "~/.flake8")
+  (setq flycheck-python-flake8-executable "flake8")
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (flycheck-add-mode 'javascript-eslint 'js-mode)
   (flycheck-add-mode 'typescript-tslint 'typescript-mode)
@@ -465,7 +467,9 @@ position between last non-whitespace and `end-of-line'."
   (flycheck-add-mode 'javascript-eslint 'rjsx-mode)
   (flycheck-add-mode 'go-build 'go-mode)
   (flycheck-add-mode 'groovy 'groovy-mode)
-  (flycheck-add-mode 'html-tidy 'web-mode))
+  (flycheck-add-mode 'html-tidy 'web-mode)
+  (flycheck-add-mode 'python-flake8 'python-mode))
+
 ;;(add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
 (add-hook 'js-mode-hook 'flycheck-mode)
@@ -475,7 +479,7 @@ position between last non-whitespace and `end-of-line'."
 (add-hook 'web-mode-hook 'flycheck-mode)
 (add-hook 'typescript-mode-hook 'flycheck-mode)
 (add-hook 'go-mode-hook 'flycheck-mode)
-
+(add-hook 'python-mode-hook 'flycheck-mode)
 
 ;; jsx mode
 (autoload 'rjsx-mode "rjsx-mode")

@@ -54,6 +54,8 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
 export GOPATH=~/go
+export GUROBI_HOME=/opt/gurobi810/linux64
+export LD_LIBRARY_PATH=$GUROBI_HOME/lib
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -77,6 +79,10 @@ fi
 
 if [ -d ~/dev/go_appengine ]; then
     PATH=$PATH:~/dev/go_appengine/
+fi
+
+if [ -d "$GUROBI_HOME" ]; then
+    PATH=$PATH:$GUROBI_HOME/bin
 fi
 
 export PATH
