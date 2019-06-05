@@ -194,7 +194,7 @@ extract () {
                 *.tar.bz2)   tar xjf $1     ;;
                 *.tar.gz)    tar xzf $1     ;;
                 *.bz2)       bunzip2 $1     ;;
-                *.rar)       unrar x $1       ;;
+                *.rar)       unrar x $1     ;;
                 *.gz)        gunzip $1      ;;
                 *.tar)       tar xf $1      ;;
                 *.tbz2)      tar xjf $1     ;;
@@ -234,28 +234,46 @@ gg () {
         case $1 in
             d) cd ~/dev/ ;;
             n) cd ~/notes/ ;;
-            rw) cd ~/dev/rena-web/ ;;
-            wp) cd ~/dev/workpro/ ;;
+            # rw) cd ~/dev/rena-web/ ;;
+            # wp) cd ~/dev/workpro/ ;;
             dl) cd ~/Downloads/ ;;
             df) cd ~/.dotfiles/ ;;
+            # lo) cd ~/dev/lem-opt/ ;;
+            # lm) cd ~/dev/lem-maps/ ;;
             *) echo "'$1' is not registered" ;;
         esac
     fi
 }
 
-# ff () {
-#     if [ -z "$1" ] || [ -z "$2" ]; then
-#         echo "Oops: need search term and file type arguments 'ff something groovy'"
-#     else
-#         #exec `ag -lQ '$1' -G '\.$2\$'`
-#         echo "ag -lQ '$1' -G '\.$2\$'"
-#         ag -lQ '$1' -G '\.$2\$'
-#         # out=$(ag -lQ '$1' -G '\.$2\$')
-#         # if [ ! -z "$out" ]; then
-#         #     echo  "$out"
-#         # fi
-#     fi
-# } >&1 2>&2
+del () {
+    if [ $# -ne 1 ]
+    then
+        echo "Wrong number of arguments"
+    else
+        TRASH_DIR=~/.local/share/Trash
+        CUR_DIR=$(pwd)
+        DATE=$(date -Iseconds)
+        # BUG: if path is not relative?
+        mv -r "$1" "$TRASH_DIR/files"
+        echo """[Trash Info]
+Path=$CUR_DIR/$1
+DeletionDate=$DATE""" > "$TRASH_DIR/info/$1.trashinfo"
+    fi
+}
+
+ff () {
+    if [ $# -lt 1 ]
+    then
+        echo "Oops: need search term and optional file extension argument 'ff something groovy'"
+    else
+        if [ ! -z "$2" ]
+        then
+            ag -lQ "$1" -G "\.$2\$"
+        else
+            ag -lQ "$1"
+        fi
+    fi
+}
 
 
 # The next line updates PATH for the Google Cloud SDK.
