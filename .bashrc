@@ -240,24 +240,49 @@ gg () {
             df) cd ~/.dotfiles/ ;;
             # lo) cd ~/dev/lem-opt/ ;;
             # lm) cd ~/dev/lem-maps/ ;;
-            *) echo "'$1' is not registered" ;;
+            *) echo "'$1' is not a registered location" ;;
         esac
     fi
 }
 
 del () {
-    if [ $# -ne 1 ]
+    if [ $# -lt 1 ]
     then
         echo "Wrong number of arguments"
     else
-        TRASH_DIR=~/.local/share/Trash
-        CUR_DIR=$(pwd)
-        DATE=$(date -Iseconds)
-        # BUG: if path is not relative?
-        mv -r "$1" "$TRASH_DIR/files"
-        echo """[Trash Info]
-Path=$CUR_DIR/$1
-DeletionDate=$DATE""" > "$TRASH_DIR/info/$1.trashinfo"
+        TRASH_DIR=$(realpath ~/.local/share/Trash)
+        DATE=$(date -Iseconds | sed 's/-[^-]*$//')
+        for file in "$@"
+        do
+            path=$(realpath "$file")
+            if [[ -f "$path" || -d  "$path" ]] && [ -w "$path" ]
+            then
+                name=$(basename "$path")
+                ext=""
+                if [[ "$name" =~ "." ]]
+                then
+                    ext="${name##*.}"
+                fi
+                pname="${name%.*}"
+                count=0
+                while [ -e "$TRASH_DIR/files/$name" ]
+                do
+                    count=$((count+1))
+                    name="$pname.$count"
+                    if [ ! -z "$ext" ]
+                    then
+                        name="$name.$ext"
+                    fi
+                done
+                outfile="$TRASH_DIR/info/$name.trashinfo"
+                echo """[Trash Info]
+Path=$path
+DeletionDate=$DATE""" > $outfile
+                mv "$path" "$TRASH_DIR/files/$name"
+            else
+                echo "File does not exist: '$path'"
+            fi
+        done
     fi
 }
 
