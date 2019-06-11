@@ -257,7 +257,8 @@ del () {
             path=$(realpath "$file")
             if [[ -f "$path" || -d  "$path" ]] && [ -w "$path" ]
             then
-                name=$(basename "$path")
+                name=$(basename "$path" | sed 's/ /_/g')
+                echo "$name"
                 ext=""
                 if [[ "$name" =~ "." ]]
                 then
