@@ -286,7 +286,7 @@ DeletionDate=$DATE""" > $outfile
     fi
 }
 
-ff () {
+sfiles () {
     if [ $# -lt 1 ]
     then
         echo "Oops: need search term and optional file extension argument 'ff something groovy'"
@@ -296,6 +296,21 @@ ff () {
             ag -lQ "$1" -G "\.$2\$"
         else
             ag -lQ "$1"
+        fi
+    fi
+}
+
+ffiles () {
+    if [ $# -lt 1 ]
+    then
+        echo "Need search term argument: '*file'"
+    else
+        format="(%TD+%Tr)\t%Y\t%P\n"
+        if [ -z "$2" ]
+        then
+            find ~/ -iname "$1" -printf "$format" -prune
+        else
+            find $2 -iname "$1" -printf "$format" -prune
         fi
     fi
 }
