@@ -550,6 +550,8 @@ position between last non-whitespace and `end-of-line'."
 ;; typescript
 (autoload 'typescript-mode "typescript-mode")
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+(add-hook 'typescript-mode-hook
+  (lambda () (setq-local flycheck-disabled-checkers '(javascript-eslint))))
 
 ;; python
 (autoload 'python-mode "python")

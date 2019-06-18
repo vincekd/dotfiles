@@ -23,7 +23,9 @@
         "sourceType": "module"
     },
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "jquery": true,
@@ -33,7 +35,8 @@
         "commonjs": true
     },
     "plugins": [
-        "react"
+        "react",
+        "@typescript-eslint"
     ],
-    "parser": "babel-eslint"
+    "parser": "@typescript-eslint/parser"
 }
