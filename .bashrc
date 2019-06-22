@@ -111,6 +111,7 @@ alias gs="git status"
 alias gd="git diff --ignore-space-change"
 alias gc="git commit -a -m "
 alias gittop="git rev-parse --show-toplevel"
+alias ggt="cd \$(gittop)"
 alias tailf="tail -f"
 alias wwwtest="ping -c 3 google.com"
 

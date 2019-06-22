@@ -588,6 +588,8 @@ position between last non-whitespace and `end-of-line'."
      "*.git/"
      "*media/"
      "*images/"
+     "*img/"
+     "*dist/"
      "/main-application/uploads/"
      "*node_modules/"))
 
@@ -632,13 +634,14 @@ position between last non-whitespace and `end-of-line'."
        ".zip"
        ".tern-project"
        ".kml"
-       ".kmz"))
+       ".kmz"
+       ".min.js"
+       ".min.css"))
   (setq projectile-globally-ignored-files
     (append '("GRTAGS"
                "GPATH"
                "GTAGS"
-               "TAGS"
-               "*.min.js")
+               "TAGS")
       projectile-globally-ignored-files))
   (setq projectile-globally-ignored-directories
     (append ignored-dirs
