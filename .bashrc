@@ -52,10 +52,13 @@ export GTAGSLABEL=pygments
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
-export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
+#export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
 export GOPATH=~/go
 export GUROBI_HOME=/opt/gurobi810/linux64
 export LD_LIBRARY_PATH=$GUROBI_HOME/lib
+export ANDROID_HOME=~/Android/Sdk/
+export ANDROID_SDK_ROOT=~/Android/Sdk/
+#export JAVA_HOME=""
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -83,6 +86,10 @@ fi
 
 if [ -d "$GUROBI_HOME" ]; then
     PATH=$PATH:$GUROBI_HOME/bin
+fi
+
+if [ -d "$ANDROID_HOME" ]; then
+    PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools
 fi
 
 export PATH
