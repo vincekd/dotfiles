@@ -52,13 +52,13 @@ export GTAGSLABEL=pygments
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
-#export NODE_PATH=~/.npm-global/lib/node_modules/:/usr/lib/node_modules/:/usr/lib/nodejs/
-export GOPATH=~/go
+export GOPATH=/home/vince/go
+export GOROOT=/usr/lib/go
 export GUROBI_HOME=/opt/gurobi810/linux64
 export LD_LIBRARY_PATH=$GUROBI_HOME/lib
 export ANDROID_HOME=~/Android/Sdk/
 export ANDROID_SDK_ROOT=~/Android/Sdk/
-#export JAVA_HOME=""
+export N_PREFIX=~/n-versions/
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -213,6 +213,7 @@ extract () {
                 *.zip)       unzip $1       ;;
                 *.Z)         uncompress $1  ;;
                 *.7z)        7z x $1        ;;
+                #*.lz)        lz4
                 *)           echo "'$1' cannot be extracted via extract()" ;;
             esac
         else
@@ -326,13 +327,8 @@ ffiles () {
     fi
 }
 
-
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/vince/dev/google-cloud-sdk/path.bash.inc' ]; then
-    source '/home/vince/dev/google-cloud-sdk/path.bash.inc';
-fi
+if [ -f '/home/vince/dev/google-cloud-sdk/path.bash.inc' ]; then . '/home/vince/dev/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/vince/dev/google-cloud-sdk/completion.bash.inc' ]; then
-    source '/home/vince/dev/google-cloud-sdk/completion.bash.inc';
-fi
+if [ -f '/home/vince/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/home/vince/dev/google-cloud-sdk/completion.bash.inc'; fi

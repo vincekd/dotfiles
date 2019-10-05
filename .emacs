@@ -69,7 +69,7 @@
      groovy-mode groovy-imports smartparens syntax-subword magit
      python-mode scss-mode  projectile auto-complete rjsx-mode
      flx-ido idomenu ido-vertical-mode ido-completing-read+ ess
-     gradle-mode ace-window auto-package-update rainbow-mode
+     gradle-mode ace-window auto-package-update rainbow-mode pug-mode
      flycheck web-mode expand-region shackle golden-ratio rust-mode
      golden-ratio-scroll-screen dired-quick-sort smart-mode-line
      package-lint ert shut-up aggressive-indent json-mode dash
@@ -356,11 +356,6 @@ position between last non-whitespace and `end-of-line'."
 (setq sml/shorten-directory t)
 (setq sml/shorten-modes t)
 (add-to-list 'sml/replacer-regexp-list '("^~/dev/" ":DEV:") t)
-(add-to-list 'sml/replacer-regexp-list '("^:DEV:workpro/main-application/" ":WP:") t)
-;; TODO: fix this
-(add-to-list 'sml/replacer-regexp-list '("^:WP:\([*\\]*\)/src/main/" ":WP/\1:") t)
-(add-to-list 'sml/replacer-regexp-list '("^:WP/\(.*\):groovy/org/egg/games/plugins/notebook/" ":WP/\1/GR:") t)
-(add-to-list 'sml/replacer-regexp-list '("^:WP/\(.*\):resources/META-INF/resources/" ":WP:\1:GR:RS") t)
 
 (setq rm-whitelist " *Proj\\[.*")
 ;;(add-to-list 'sml/replacer-regexp-list '("^:Git:\(.*\)/src/main/java/" ":G/\1/SMJ:") t)
@@ -512,11 +507,11 @@ position between last non-whitespace and `end-of-line'."
 (with-eval-after-load "js"
   (setq
     ;;js-language-version 200
-    js-indent-level 4
+    js-indent-level 2
     js-expr-indent-offset 4
     js-paren-indent-offset 4
     js-indent-first-init 'dynamic
-    js-switch-indent-offset 4
+    js-switch-indent-offset 2
     ;; only works in emacs 26+
     js-chain-indent t
     js-indent-align-list-continuation nil))
@@ -552,6 +547,8 @@ position between last non-whitespace and `end-of-line'."
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 (add-hook 'typescript-mode-hook
   (lambda () (setq-local flycheck-disabled-checkers '(javascript-eslint))))
+(with-eval-after-load "typescript-mode"
+  (setq typescript-indent-level 2))
 
 ;; python
 (autoload 'python-mode "python")
@@ -862,3 +859,8 @@ position between last non-whitespace and `end-of-line'."
   (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
   (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags))
 (add-hook 'prog-mode-hook 'ggtags-mode)
+
+
+;; Express tempaltes (pug-mode)
+(autoload 'pug-mode "pug-mode")
+(add-to-list 'auto-mode-alist '("\\.pug" . pug-mode))

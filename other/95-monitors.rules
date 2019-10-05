@@ -1,0 +1,2 @@
+
+ACTION=="change", RUN+="/home/vince/bin/disp-auto.sh"
