@@ -54,8 +54,9 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export GOPATH=/home/vince/go
 export GOROOT=/usr/lib/go
-export GUROBI_HOME=/opt/gurobi810/linux64
-export LD_LIBRARY_PATH=$GUROBI_HOME/lib
+#export GUROBI_HOME=/opt/gurobi810/linux64
+export GUROBI_HOME=/opt/gurobi900/linux64
+export LD_LIBRARY_PATH=$GUROBI_HOME/lib #:$LD_LIBRARY_PATH
 export ANDROID_HOME=~/Android/Sdk/
 export ANDROID_SDK_ROOT=~/Android/Sdk/
 export N_PREFIX=~/n-versions/
@@ -78,6 +79,10 @@ fi
 
 if [ -d ~/bin/ ]; then
     PATH=$PATH:~/bin/
+fi
+
+if [ -d ~/.local/bin/ ]; then
+    PATH=$PATH:~/.local/bin/
 fi
 
 if [ -d ~/dev/go_appengine ]; then
@@ -114,7 +119,11 @@ alias pss="ps aux | grep -v grep | grep -i"
 alias q="exit"
 alias lss="ll | grep -i"
 alias cdl="cd -"
-alias gs="git status"
+if hash gs 2>/dev/null; then
+    alias gts="git status"
+else
+    alias gs="git status"
+fi
 alias gd="git diff --ignore-space-change"
 alias gc="git commit -a -m "
 alias gittop="git rev-parse --show-toplevel"

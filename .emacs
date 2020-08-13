@@ -43,6 +43,8 @@
   ;;:height 100
   :height 105
   )
+;; (set-face-attribute 'default t nil "Courier New" nil 'append)
+(set-fontset-font t 'unicode "Consolas" nil 'append)
 ;;(set-frame-font "Noto Mono" nil t)
 
 ;;
@@ -554,6 +556,7 @@ position between last non-whitespace and `end-of-line'."
 (autoload 'python-mode "python")
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (with-eval-after-load "python"
+  ;; (setq python-indent-offset 4)
   (define-key python-mode-map (kbd "DEL") nil))
 
 (require 'syntax-subword)
@@ -588,6 +591,7 @@ position between last non-whitespace and `end-of-line'."
      "*img/"
      "*dist/"
      "/main-application/uploads/"
+     "*fontello/"
      "*node_modules/"))
 
 (require 'ag)
@@ -756,6 +760,7 @@ position between last non-whitespace and `end-of-line'."
     web-mode-enable-auto-expanding t
     web-mode-enable-current-element-highlight t
     web-mode-auto-close-style 2))
+(add-hook 'web-mode-hook (lambda () (smartparens-mode -1)))
 
 
 ;; make unique names of tabs and shit

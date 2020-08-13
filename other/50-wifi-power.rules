@@ -1,0 +1,2 @@
+SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="iw dev wlp2s0 set power_save on"
+SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="iw dev wlp2s0 set power_save off"

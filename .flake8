@@ -1,5 +1,5 @@
 [flake8]
 exclude = .git,__pycache__,build,dist,*.pyc,data,*.txt,*.ini,*.log,*.yml
 #max-complexity = 10
-ignore = E261,E265,E302,E303,E305,E501,W504
+ignore = E261,E265,E302,E303,E305,E306,E501,W504
 max-line-length = 120
