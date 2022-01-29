@@ -10,10 +10,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; #!Space::Send {Media_Play_Pause}
 
 ; Ctrl Alt 
-^!Down::Send {Media_Play_Pause}
-^!Space::Send {Media_Play_Pause}
-^!Left::Send {Media_Prev}
-^!Right::Send {Media_Next}
+; ^!Down::Send {Media_Play_Pause}
+; ^!Space::Send {Media_Play_Pause}
+; ^!Left::Send {Media_Prev}
+; ^!Right::Send {Media_Next}
 
 ; right alt
 ; >!Down::Send {Media_Play_Pause}
@@ -24,3 +24,9 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; !Space::Send {Media_Play_Pause}
 ; !+,::Send {Media_Prev}
 ; !+.::Send {Media_Next}
+
+; fn + alt
+; !::Send {Media_Play_Pause}
+!PgDn::Send {Media_Play_Pause}
+!Home::Send {Media_Prev}
+!End::Send {Media_Next}
