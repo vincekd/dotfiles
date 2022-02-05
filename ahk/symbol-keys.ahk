@@ -19,9 +19,9 @@ return
 SendInput {–}
 return
 
-!+.::
-SendInput {…}
-return
+;;!+.::
+;;SendInput {…}
+;;return
 
 ;; front facing pilcrow?
 ;; !+o::
